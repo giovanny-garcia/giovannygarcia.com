@@ -1,0 +1,38 @@
+.navbar {
+  align-items: center; /* Vertically align items in the center */
+  background-color: #333; /* Dark background */
+  color: transparent;
+  display: flex; /* Enable flexbox for layout */
+  justify-content: space-between; /* Space out items horizontally */
+  padding: 15px 20px; /* Top and bottom padding, left and right padding */
+}
+.navbar-brand {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+.navbar .logo {
+  width: 50px; /* Set a fixed width for the logo */
+  height: auto; /* Maintain aspect ratio */
+  margin-right: 10px; /* Space between logo and brand name */
+}
+.navbar-nav {
+  display: flex; /* Arrange list items horizontally */
+  list-style: none; /* Remove bullet points from the list */
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-left: 20px; /* Space between navigation items */
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none; /* Remove underlines from links */
+  padding: 8px 12px;
+  border-radius: 5px; /* Optional: Rounded corners for links */
+}
+
+.nav-link:hover {
+  background-color: #555; /* Darker background on hover */
+}
