@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 function Scene() {
     const mountRef = useRef<HTMLDivElement>(null)
@@ -15,13 +16,20 @@ function Scene() {
         const scene = new THREE.Scene()
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
         const renderer = new THREE.WebGLRenderer({ antialias: true })
-        const light = new THREE.AmbientLight(color, intensity)
 
         renderer.setSize(window.innerWidth, window.innerHeight)
         renderer.setClearColor(0x222222)
+
         if (mountRef.current) {
             mountRef.current.appendChild(renderer.domElement)
         }
+
+        // Add OrbitControls
+        const controls = new OrbitControls(camera, renderer.domElement)
+        controls.enableDamping = true // Smooth camera movement
+        controls.dampingFactor = 0.05
+        controls.target.set(0, 0, 0) // Focus on the center of the scene
+        controls.update()
 
         // Basic lighting
         const ambientLight = new THREE.AmbientLight(0x404040, 0.6)
@@ -37,16 +45,32 @@ function Scene() {
 
         // Load GLTF model
         const loader = new GLTFLoader()
-        let model: THREE.Object3D | null = null // Reference to the loaded model
+
+        // Model desk
+        let table: THREE.Object3D | null = null // Reference to the loaded model
+
         loader.load(
             '/models/desk.glb', // Replace with the actual path to your model
             (gltf) => {
-                model = gltf.scene
-                scene.add(model)
+                table = gltf.scene
+                scene.add(table)
             },
             undefined,
             (error) => {
-                console.error('An error occurred while loading the model:', error)
+                console.error('An error occurred while loading the table model:', error)
+            }
+        )
+
+        loader.load(
+            '/models/testing-unit.glb', 
+            (gltf) => {
+                const test = gltf.scene
+                test.position.set(0, 0, 0) // Adjust position as needed
+                scene.add(test)
+            },
+            undefined,
+            (error) => {
+                console.error('An error occurred while loading the proto model:', error)
             }
         )
 
@@ -55,10 +79,11 @@ function Scene() {
             requestAnimationFrame(animate)
 
             // Rotate the model slowly if it exists
-            if (model) {
-                model.rotation.y += 0.01 // Adjust rotation speed here
+            if (table) {
+                table.rotation.y += 0.001 // Adjust rotation speed here
             }
 
+            controls.update() // Update OrbitControls
             renderer.render(scene, camera)
         }
         animate()
