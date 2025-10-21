@@ -1,6 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5savnorj4t0q"]
-
-[ext_resource type="Script" path="res://addons/touch_screen_joystick/touch_screen_joystick.gd" id="1_x8wa4"]
+[gd_scene load_steps=2 format=3 uid="uid://b5savnorj4t0q"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_yb6wg"]
 size = Vector2(150, 250)
@@ -88,11 +86,3 @@ text = "h"
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-
-[node name="TouchScreenJoystick" type="Control" parent="."]
-anchors_preset = 0
-offset_left = 114.0
-offset_top = 481.0
-offset_right = 154.0
-offset_bottom = 521.0
-script = ExtResource("1_x8wa4")
