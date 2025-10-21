@@ -1,0 +1,98 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5savnorj4t0q"]
+
+[ext_resource type="Script" path="res://addons/touch_screen_joystick/touch_screen_joystick.gd" id="1_x8wa4"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_yb6wg"]
+size = Vector2(150, 250)
+
+[node name="UserInterface" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Phone" type="Control" parent="."]
+custom_minimum_size = Vector2(150, 250)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Phone"]
+z_index = -1
+y_sort_enabled = true
+texture = SubResource("PlaceholderTexture2D_yb6wg")
+centered = false
+
+[node name="GridContainer" type="GridContainer" parent="Phone"]
+y_sort_enabled = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.5
+offset_top = -50.5
+offset_right = 32.5
+offset_bottom = 50.5
+grow_horizontal = 2
+grow_vertical = 2
+columns = 3
+
+[node name="Button" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button2" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button3" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button4" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button5" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button6" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button7" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button8" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button9" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Control" type="Control" parent="Phone"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TouchScreenJoystick" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 114.0
+offset_top = 481.0
+offset_right = 154.0
+offset_bottom = 521.0
+script = ExtResource("1_x8wa4")

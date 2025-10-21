@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://bejbfo8bm6p8h"]
+
+[ext_resource type="Script" path="res://Scenes/Player/player_proto.gd" id="1_x5qvt"]
+[ext_resource type="PackedScene" uid="uid://b5savnorj4t0q" path="res://Scenes/Player/user_interface.tscn" id="2_hjvrl"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_xo5e0"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_i12s2"]
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+collision_mask = 2
+script = ExtResource("1_x5qvt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CylinderShape3D_xo5e0")
+
+[node name="Head" type="Node3D" parent="."]
+
+[node name="Torso" type="Node3D" parent="."]
+
+[node name="Legs" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_i12s2")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 4, 6)
+
+[node name="UserInterface" parent="Camera3D" instance=ExtResource("2_hjvrl")]
