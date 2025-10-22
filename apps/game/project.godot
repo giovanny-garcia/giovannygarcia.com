@@ -26,7 +26,7 @@ project/assembly_name="PortfolioGame"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/touchscreenbuttoncontrol/plugin.cfg", "res://addons/versatile-mobile-joystick/plugin.cfg")
+enabled=PackedStringArray("res://addons/minimize_html_build/plugin.cfg", "res://addons/multi_touchscreenbutton/plugin.cfg", "res://addons/touchscreenbuttoncontrol/plugin.cfg", "res://addons/versatile-mobile-joystick/plugin.cfg")
 
 [file_customization]
 
