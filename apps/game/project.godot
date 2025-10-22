@@ -33,7 +33,6 @@ enabled=PackedStringArray("res://addons/touchscreenbuttoncontrol/plugin.cfg", "r
 folder_colors={
 "res://Assets/": "red",
 "res://Audio/": "orange",
-"res://Docs/": "purple",
 "res://Scenes/": "yellow",
 "res://Scripts/": "green"
 }
