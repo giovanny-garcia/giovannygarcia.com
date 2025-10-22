@@ -1,24 +1,63 @@
-[gd_scene load_steps=4 format=3 uid="uid://ps6xgogdf1q4"]
+[gd_scene load_steps=9 format=3 uid="uid://ps6xgogdf1q4"]
 
 [ext_resource type="Script" path="res://Scripts/Worlds/Overworld.gd" id="1_7l1e4"]
 [ext_resource type="PackedScene" uid="uid://bejbfo8bm6p8h" path="res://Scenes/Player/PlayerProto.tscn" id="2_weqn2"]
+[ext_resource type="Texture2D" uid="uid://c250li12wu6bm" path="res://Assets/5.jpg" id="3_kw6n8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ur41"]
 albedo_color = Color(0.018267, 0.363563, 0.0149479, 1)
 
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_0lwss"]
+panorama = ExtResource("3_kw6n8")
+
+[sub_resource type="Sky" id="Sky_rq5pd"]
+sky_material = SubResource("PanoramaSkyMaterial_0lwss")
+
+[sub_resource type="Environment" id="Environment_q4luq"]
+background_mode = 2
+sky = SubResource("Sky_rq5pd")
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_l8vqt"]
+height = 10.0
+radius = 20.0
+
 [node name="Overworld" type="Node3D"]
 script = ExtResource("1_7l1e4")
-
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
-layers = 3
-use_collision = true
-collision_layer = 2
-size = Vector3(10, 1, 10)
-material = SubResource("StandardMaterial3D_7ur41")
 
 [node name="CharacterBody3D" parent="." instance=ExtResource("2_weqn2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.84, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 22, 16)
+light_energy = 1.97
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+collision_layer = 2
+
+[node name="Platform" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -21.4739)
+use_collision = true
+collision_layer = 2
+size = Vector3(68, 1, 52.9478)
+material = SubResource("StandardMaterial3D_7ur41")
+
+[node name="CSGTorus3D" type="CSGTorus3D" parent="CSGCombiner3D"]
+transform = Transform3D(5.184, 0, 0, 0, 2.16, 0, 0, 0, 5.832, 0, 0.686658, -18.9553)
+
+[node name="CSGTorus3D2" type="CSGTorus3D" parent="CSGCombiner3D"]
+transform = Transform3D(2.592, 0, 0, 0, 1.08, 0, 0, 0, 2.916, 0, 2.68666, -18.9553)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0106406, 1, -18.9771)
+radius = 1.0
+height = 6.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_q4luq")
+
+[node name="BlogZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.0242, 0, -6.40842)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BlogZone"]
+shape = SubResource("CylinderShape3D_l8vqt")

@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bejbfo8bm6p8h"]
+[gd_scene load_steps=6 format=3 uid="uid://bejbfo8bm6p8h"]
 
 [ext_resource type="Script" path="res://Scenes/Player/player_proto.gd" id="1_x5qvt"]
 [ext_resource type="PackedScene" uid="uid://b5savnorj4t0q" path="res://Scenes/Player/user_interface.tscn" id="2_hjvrl"]
+[ext_resource type="PackedScene" uid="uid://dd0ggc7taiea3" path="res://addons/multi_touchscreenbutton/multi_touch_screen_button.scn" id="3_7ebm3"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_xo5e0"]
 
@@ -24,6 +25,21 @@ shape = SubResource("CylinderShape3D_xo5e0")
 mesh = SubResource("CylinderMesh_i12s2")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 4, 6)
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 3, 6)
 
 [node name="UserInterface" parent="Camera3D" instance=ExtResource("2_hjvrl")]
+y_sort_enabled = true
+
+[node name="MultiTouchScreenButton" parent="Camera3D" instance=ExtResource("3_7ebm3")]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -226.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+grow_vertical = 0
+action = "JUMP"
