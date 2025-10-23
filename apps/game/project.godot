@@ -15,10 +15,15 @@ run/main_scene="res://Scenes/Worlds/Overworld.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameManager="*res://Scripts/Global/GameManager.gd"
+
 [display]
 
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
+window/vsync/vsync_mode=0
 
 [dotnet]
 
@@ -26,7 +31,7 @@ project/assembly_name="PortfolioGame"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/minimize_html_build/plugin.cfg", "res://addons/multi_touchscreenbutton/plugin.cfg", "res://addons/touchscreenbuttoncontrol/plugin.cfg", "res://addons/versatile-mobile-joystick/plugin.cfg")
+enabled=PackedStringArray("res://addons/gltf2meshlib/plugin.cfg", "res://addons/minimize_html_build/plugin.cfg", "res://addons/multi_touchscreenbutton/plugin.cfg", "res://addons/versatile-mobile-joystick/plugin.cfg")
 
 [file_customization]
 

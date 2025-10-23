@@ -10,6 +10,9 @@ func _ready():
 	#
 
 func _physics_process(delta: float) -> void:
+	# Set Movement as a Global 
+	GameManager.set_player_movement(velocity)
+
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -30,6 +33,11 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+
+func _process(delta):
+	if GameManager.progress_conditions["has_visited_home"] == true:
+		print("home visited")
+		
 
 func jump():
 	velocity.y = JUMP_VELOCITY

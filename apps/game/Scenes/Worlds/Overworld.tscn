@@ -56,8 +56,11 @@ height = 6.0
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_q4luq")
 
-[node name="BlogZone" type="Area3D" parent="."]
+[node name="HomeZone" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.0242, 0, -6.40842)
+collision_layer = 2
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="BlogZone"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HomeZone"]
 shape = SubResource("CylinderShape3D_l8vqt")
+
+[connection signal="body_entered" from="HomeZone" to="." method="_on_home_zone_body_entered"]

@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="CursorConfig" load_steps=3 format=3 uid="uid://cc7664bywpfcy"]
 
-[ext_resource type="Script" uid="uid://sxou6vfijepl" path="res://addons/animated_hardware_cursor/AnimatedCursorConfig.gd" id="1_8mk3k"]
+[ext_resource type="Script" path="res://addons/animated_hardware_cursor/AnimatedCursorConfig.gd" id="1_8mk3k"]
 [ext_resource type="SpriteFrames" uid="uid://debrtytqyt4gj" path="res://addons/animated_hardware_cursor/cursor_spritesheet_resource.tres" id="1_hde2e"]
 
 [resource]

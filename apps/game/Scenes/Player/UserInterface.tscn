@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://b5savnorj4t0q"]
+[gd_scene load_steps=11 format=3 uid="uid://b5savnorj4t0q"]
 
-[ext_resource type="PackedScene" uid="uid://btf0iccai10qr" path="res://addons/versatile-mobile-joystick/joystick.tscn" id="1_lmknn"]
-[ext_resource type="Texture2D" uid="uid://b3rjj1bmqtiok" path="res://addons/versatile-mobile-joystick/default_textures/BaseJoystickTest.png" id="2_a7w3x"]
-[ext_resource type="Texture2D" uid="uid://dlgmq4q7t23o8" path="res://addons/versatile-mobile-joystick/default_textures/TipJoystickTest.png" id="3_16sso"]
-[ext_resource type="Texture2D" uid="uid://dntw303j2w3ly" path="res://Assets/Minimap.png" id="4_rhps5"]
+[ext_resource type="Script" path="res://Scripts/Player/UserInterface.gd" id="1_d66tg"]
+[ext_resource type="PackedScene" uid="uid://btf0iccai10qr" path="res://addons/versatile-mobile-joystick/joystick.tscn" id="2_nju8u"]
+[ext_resource type="Texture2D" uid="uid://b3rjj1bmqtiok" path="res://addons/versatile-mobile-joystick/default_textures/BaseJoystickTest.png" id="3_op4c3"]
+[ext_resource type="Texture2D" uid="uid://dlgmq4q7t23o8" path="res://addons/versatile-mobile-joystick/default_textures/TipJoystickTest.png" id="4_n4ofn"]
+[ext_resource type="Texture2D" uid="uid://dntw303j2w3ly" path="res://Assets/Minimap.png" id="5_4yykv"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_yb6wg"]
 size = Vector2(150, 250)
@@ -28,8 +29,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_d66tg")
 
 [node name="Phone" type="Control" parent="."]
+visible = false
 custom_minimum_size = Vector2(150, 250)
 layout_mode = 1
 anchors_preset = 3
@@ -121,10 +124,10 @@ text = "Time: 14:03"
 [node name="Joystick" type="Node2D" parent="."]
 position = Vector2(-2, 289)
 
-[node name="JoystickController" parent="Joystick" instance=ExtResource("1_lmknn")]
+[node name="JoystickController" parent="Joystick" instance=ExtResource("2_nju8u")]
 position = Vector2(393, 178)
-base_texture = ExtResource("2_a7w3x")
-tip_texture = ExtResource("3_16sso")
+base_texture = ExtResource("3_op4c3")
+tip_texture = ExtResource("4_n4ofn")
 deadzone_circle = SubResource("CircleShape2D_kq3io")
 tip_limit_circle = SubResource("CircleShape2D_i3khs")
 touch_detection_region = SubResource("RectangleShape2D_62lar")
@@ -147,7 +150,7 @@ grow_horizontal = 0
 [node name="Sprite2D" type="Sprite2D" parent="Control"]
 texture_filter = 1
 scale = Vector2(2, 2)
-texture = ExtResource("4_rhps5")
+texture = ExtResource("5_4yykv")
 centered = false
 
 [node name="ToastContainer" type="VBoxContainer" parent="."]
