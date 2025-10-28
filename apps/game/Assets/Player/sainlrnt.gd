@@ -13,13 +13,13 @@ func _on_state_changed(new_state: String) -> void:
 	match new_state:
 		"IdleState":
 			print("Playing Idle Animation")
-			animationPlayer.stop()
+			animationPlayer.play("Idle")
 		"RunningState":
 			print("Playing Run Animation")
 			animationPlayer.play("Run")
 		"JumpingState":
 			print("Playing Jump Animation")
-			#animationPlayer.play("Jump")
+			animationPlayer.play("Jump")
 		_:
 			print("Unknown state: %s" % new_state)
 			animationPlayer.stop()
