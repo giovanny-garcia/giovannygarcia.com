@@ -46,13 +46,14 @@ grow_vertical = 0
 action = "JUMP"
 
 [node name="AnimationHandler" parent="." instance=ExtResource("2_rw8o3")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 script = ExtResource("5_t3dsg")
 
 [node name="legL2" parent="AnimationHandler/Node" index="3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.125, 0.3125, -0.1875)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.125, 0.3125, -0.100297)
 
 [node name="legR2" parent="AnimationHandler/Node" index="4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.125, 0.5, 0.3125)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.125, 0.467299, 0.225297)
 
 [node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("CURRENT_STATE")]
 script = ExtResource("6_kssi2")

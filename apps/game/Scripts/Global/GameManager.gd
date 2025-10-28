@@ -1,5 +1,7 @@
 extends Node
 
+signal state_changed(new_state: String)
+
 var player_state
 var player_movement
 
@@ -24,7 +26,9 @@ func get_condition(key: String):
 		print("Error. Non-existent key while trying to get")
 
 func set_player_state(player_state_instance):
-	player_state = player_state_instance
+	if player_state != player_state_instance:
+		player_state = player_state_instance
+		emit_signal("state_changed", player_state_instance.name)
 
 func set_player_movement(velocity: Vector3):
 	player_movement = velocity

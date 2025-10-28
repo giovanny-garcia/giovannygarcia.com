@@ -1,10 +1,25 @@
 extends Node3D
-
-var animationPlayer
+@onready var animationPlayer: AnimationPlayer = $AnimationPlayer
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	animationPlayer = $AnimationPlayer
 	
+	# Connect to a hypothetical GameManager's state_changed signal
+	GameManager.state_changed.connect(_on_state_changed)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
+
+func _on_state_changed(new_state: String) -> void:
+	match new_state:
+		"IdleState":
+			print("Playing Idle Animation")
+			animationPlayer.stop()
+		"RunningState":
+			print("Playing Run Animation")
+			animationPlayer.play("Run")
+		"JumpingState":
+			print("Playing Jump Animation")
+			#animationPlayer.play("Jump")
+		_:
+			print("Unknown state: %s" % new_state)
+			animationPlayer.stop()
