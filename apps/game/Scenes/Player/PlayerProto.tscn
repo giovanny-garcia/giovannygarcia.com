@@ -10,14 +10,14 @@
 [ext_resource type="Script" path="res://Scripts/Player/Jumping.gd" id="8_68106"]
 [ext_resource type="Script" path="res://Scripts/Player/Running.gd" id="9_gorp3"]
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_xo5e0"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gso6v"]
 
 [node name="CharacterBody3D" type="CharacterBody3D"]
 collision_mask = 2
 script = ExtResource("1_x5qvt")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("CylinderShape3D_xo5e0")
+shape = SubResource("CapsuleShape3D_gso6v")
 
 [node name="Head" type="Node3D" parent="."]
 
@@ -46,14 +46,8 @@ grow_vertical = 0
 action = "JUMP"
 
 [node name="AnimationHandler" parent="." instance=ExtResource("2_rw8o3")]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -1, 0)
 script = ExtResource("5_t3dsg")
-
-[node name="legL2" parent="AnimationHandler/Node" index="3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.125, 0.3125, -0.100297)
-
-[node name="legR2" parent="AnimationHandler/Node" index="4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.125, 0.467299, 0.225297)
 
 [node name="FiniteStateMachine" type="Node" parent="." node_paths=PackedStringArray("CURRENT_STATE")]
 script = ExtResource("6_kssi2")

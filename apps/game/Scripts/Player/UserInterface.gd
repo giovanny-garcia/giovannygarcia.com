@@ -11,5 +11,4 @@ func _ready() -> void:
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if GameManager.get_condition("has_visited_home") == true:
-		ToastLabel.text = "Home Visited!"
+	pass

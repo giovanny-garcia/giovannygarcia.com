@@ -3,6 +3,9 @@ extends CharacterBody3D
 const SPEED:int = 5.0
 const JUMP_VELOCITY:int = 4.5
 
+@onready var camera: Camera3D = $Camera3D
+@onready var UserInterface: Node = $Camera3D/UserInterface
+@onready var ToastLabel: Label = $Camera3D/UserInterface/ToastContainer/Toast/Label
 func _ready():
 	pass
 	#build_character(seed)
@@ -35,9 +38,12 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _process(delta):
-	if GameManager.progress_conditions["has_visited_home"] == true:
-		print("home visited")
+	pass
 		
 
 func jump():
 	velocity.y = JUMP_VELOCITY
+
+
+func _on_guitar_body_entered(body:Node3D) -> void:
+	ToastLabel.text = "Guitar Obtained!"

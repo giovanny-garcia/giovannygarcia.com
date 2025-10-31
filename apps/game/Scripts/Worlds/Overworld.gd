@@ -13,3 +13,7 @@ func _process(delta: float) -> void:
 
 func _on_home_zone_body_entered(body: Node3D) -> void:
 	GameManager.progress_conditions["has_visited_home"] = true
+
+
+func _on_guitar_body_entered(body: Node3D) -> void:
+	GameManager.guitar_obtained = true
