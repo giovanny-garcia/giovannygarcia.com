@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://btf0iccai10qr" path="res://addons/versatile-mobile-joystick/joystick.tscn" id="2_nju8u"]
 [ext_resource type="Texture2D" uid="uid://b3rjj1bmqtiok" path="res://addons/versatile-mobile-joystick/default_textures/BaseJoystickTest.png" id="3_op4c3"]
 [ext_resource type="Texture2D" uid="uid://dlgmq4q7t23o8" path="res://addons/versatile-mobile-joystick/default_textures/TipJoystickTest.png" id="4_n4ofn"]
-[ext_resource type="Texture2D" uid="uid://dntw303j2w3ly" path="res://Assets/Minimap.png" id="5_4yykv"]
+[ext_resource type="Texture2D" uid="uid://dntw303j2w3ly" path="res://Assets/UI/Minimap.png" id="5_4yykv"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_yb6wg"]
 size = Vector2(150, 250)

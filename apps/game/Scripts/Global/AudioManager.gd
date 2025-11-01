@@ -8,6 +8,13 @@ var buses = { # Dictionary of audio buses
 
 var sound_effects = { # Dictionary of sound effects
 #	"shoot": preload("res://Audio/Player/shoot.wav"),
+	"coin": preload("res://Assets/Audio/SFX/coin.wav"),
+	"explosion": preload("res://Assets/Audio/SFX/explosion.wav"),
+	"pop-1": preload("res://Assets/Audio/SFX/pop-1.ogg"),
+	"boing": preload("res://Assets/Audio/SFX/boing.mp3"),
+	"blip": preload("res://Assets/Audio/SFX/blip.wav"),
+	"heal": preload("res://Assets/Audio/SFX/heal.wav"),
+	"level": preload("res://Assets/Audio/SFX/lvl-up.wav"),
 }
 
 var music_player: AudioStreamPlayer = null
@@ -257,10 +264,10 @@ func setup_gameplay_music_queue():
 	print("🎵 Setting up gameplay music queue...")
 	
 	# Load all songs directly first
-	var song1 = load("res://Audio/Music/main_menu.ogg")
-	var song2 = load("res://Audio/Music/BulletHellMainMenuDemo.ogg")
-	var song3 = load("res://Audio/Music/dont_take_this_personally.mp3")
-	var song4 = load("res://Audio/Music/zap.mp3")
+	var song1 = load("res://Assets/Audio/Music/main_menu.ogg")
+	var song2 = load("res://Assets/Audio/Music/BulletHellMainMenuDemo.ogg")
+	var song3 = load("res://Assets/Audio/Music/dont_take_this_personally.mp3")
+	var song4 = load("res://Assets/Audio/Music/zap.mp3")
 	
 	print("🎵 Loaded songs directly:")
 	print("  Song 1: ", song1 != null, " - ", song1.resource_path if song1 else "null")
@@ -270,13 +277,13 @@ func setup_gameplay_music_queue():
 	
 	# Make them non-looping
 	if song1:
-		song1 = load_non_looping_audio("res://Audio/Music/main_menu.ogg")
+		song1 = load_non_looping_audio("res://Assets/Audio/Music/main_menu.ogg")
 	if song2:
-		song2 = load_non_looping_audio("res://Audio/Music/BulletHellMainMenuDemo.ogg")
+		song2 = load_non_looping_audio("res://Assets/Audio/Music/BulletHellMainMenuDemo.ogg")
 	if song3:
-		song3 = load_non_looping_audio("res://Audio/Music/dont_take_this_personally.mp3")
+		song3 = load_non_looping_audio("res://Assets/Audio/Music/dont_take_this_personally.mp3")
 	if song4:
-		song4 = load_non_looping_audio("res://Audio/Music/zap.mp3")
+		song4 = load_non_looping_audio("res://Assets/Audio/Music/zap.mp3")
 	
 	print("🎵 Made non-looping:")
 	print("  Song 1: ", song1 != null)

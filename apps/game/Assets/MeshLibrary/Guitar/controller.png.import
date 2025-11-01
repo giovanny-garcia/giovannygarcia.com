@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dntw303j2w3ly"
-path="res://.godot/imported/Minimap.png-6889fbfe91329a266b7d04502cbec0c2.ctex"
+uid="uid://cobi5ymj5jbb4"
+path="res://.godot/imported/controller.png-141d652dbd9f96f37e242c4e29eef348.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Minimap.png"
-dest_files=["res://.godot/imported/Minimap.png-6889fbfe91329a266b7d04502cbec0c2.ctex"]
+source_file="res://Assets/MeshLibrary/Guitar/controller.png"
+dest_files=["res://.godot/imported/controller.png-141d652dbd9f96f37e242c4e29eef348.ctex"]
 
 [params]
 

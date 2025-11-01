@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
 const SPEED:int = 5.0
-const JUMP_VELOCITY:int = 4.5
+const JUMP_VELOCITY:int = 5.5
 
 @onready var camera: Camera3D = $Camera3D
 @onready var UserInterface: Node = $Camera3D/UserInterface
