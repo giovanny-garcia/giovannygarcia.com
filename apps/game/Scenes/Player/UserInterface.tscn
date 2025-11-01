@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://b5savnorj4t0q"]
+[gd_scene load_steps=12 format=3 uid="uid://b5savnorj4t0q"]
 
 [ext_resource type="Script" path="res://Scripts/Player/UserInterface.gd" id="1_d66tg"]
 [ext_resource type="PackedScene" uid="uid://btf0iccai10qr" path="res://addons/versatile-mobile-joystick/joystick.tscn" id="2_nju8u"]
 [ext_resource type="Texture2D" uid="uid://b3rjj1bmqtiok" path="res://addons/versatile-mobile-joystick/default_textures/BaseJoystickTest.png" id="3_op4c3"]
 [ext_resource type="Texture2D" uid="uid://dlgmq4q7t23o8" path="res://addons/versatile-mobile-joystick/default_textures/TipJoystickTest.png" id="4_n4ofn"]
 [ext_resource type="Texture2D" uid="uid://dntw303j2w3ly" path="res://Assets/UI/Minimap.png" id="5_4yykv"]
+[ext_resource type="PackedScene" uid="uid://73jm5qjy52vq" path="res://addons/dialogue_manager/example_balloon/example_balloon.tscn" id="6_fenao"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_yb6wg"]
 size = Vector2(150, 250)
@@ -167,7 +168,7 @@ custom_minimum_size = Vector2(300, 150)
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-color = Color(0.704865, 0.832605, 0.715397, 1)
+color = Color(0.0469324, 0.21401, 0.22506, 1)
 
 [node name="Label" type="Label" parent="ToastContainer/Toast"]
 layout_mode = 0
@@ -185,3 +186,5 @@ offset_top = 1.0
 offset_bottom = 32.0
 grow_horizontal = 0
 text = "X"
+
+[node name="ExampleBalloon" parent="." instance=ExtResource("6_fenao")]

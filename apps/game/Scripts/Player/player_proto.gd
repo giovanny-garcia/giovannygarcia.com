@@ -7,8 +7,7 @@ const JUMP_VELOCITY:int = 5.5
 @onready var UserInterface: Node = $Camera3D/UserInterface
 @onready var ToastLabel: Label = $Camera3D/UserInterface/ToastContainer/Toast/Label
 func _ready():
-	pass
-	#build_character(seed)
+	ToastLabel.text = "Hello Player! Here are your controls:\nWASD/Arrow Keys to Move\nSpace to Jump\nEnter to Interact\n Or Use Touch Controls!"
 	#enable controls based on system
 	#
 
@@ -47,3 +46,11 @@ func jump():
 
 func _on_guitar_body_entered(body:Node3D) -> void:
 	ToastLabel.text = "Guitar Obtained!"
+
+
+func _on_controller_body_entered(body:Node3D) -> void:
+	ToastLabel.text = "Controller Obtained!"
+
+
+func _on_book_body_entered(body:Node3D) -> void:
+	ToastLabel.text = "Book Obtained!"

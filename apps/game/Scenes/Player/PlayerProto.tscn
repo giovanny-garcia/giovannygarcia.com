@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bejbfo8bm6p8h"]
+[gd_scene load_steps=13 format=3 uid="uid://bejbfo8bm6p8h"]
 
 [ext_resource type="Script" path="res://Scripts/Player/player_proto.gd" id="1_x5qvt"]
 [ext_resource type="PackedScene" uid="uid://b5savnorj4t0q" path="res://Scenes/Player/UserInterface.tscn" id="2_hjvrl"]
@@ -9,8 +9,11 @@
 [ext_resource type="Script" path="res://Scripts/Player/Idle.gd" id="7_nxt7m"]
 [ext_resource type="Script" path="res://Scripts/Player/Jumping.gd" id="8_68106"]
 [ext_resource type="Script" path="res://Scripts/Player/Running.gd" id="9_gorp3"]
+[ext_resource type="Script" path="res://Scenes/Player/InteractZone.gd" id="10_r3fi5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gso6v"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_5ujq3"]
 
 [node name="CharacterBody3D" type="CharacterBody3D"]
 collision_mask = 2
@@ -61,5 +64,14 @@ script = ExtResource("8_68106")
 
 [node name="RunningState" type="Node" parent="FiniteStateMachine"]
 script = ExtResource("9_gorp3")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("10_r3fi5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(5.4, 0, 0, 0, 5.4, 0, 0, 0, 5.4, 0, 0, 0)
+shape = SubResource("SphereShape3D_5ujq3")
 
 [editable path="AnimationHandler"]

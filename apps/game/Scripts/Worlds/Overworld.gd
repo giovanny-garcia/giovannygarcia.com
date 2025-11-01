@@ -31,3 +31,9 @@ func _on_home_zone_body_entered(body: Node3D) -> void:
 func _on_guitar_body_entered(body: Node3D) -> void:
 	GameManager.guitar_obtained = true
 	
+	
+func _on_controller_body_entered(body:Node3D) -> void:
+	GameManager.controller_obtained = true
+
+func _on_book_body_entered(body:Node3D) -> void:
+	GameManager.book_obtained = true
