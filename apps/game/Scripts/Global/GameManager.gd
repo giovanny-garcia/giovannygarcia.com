@@ -5,6 +5,9 @@ signal state_changed(new_state: String)
 var player_state: State
 var player_movement: Vector3 
 
+var blip_locations {
+ int: Vector3(0,0,0) 
+}
 @export var has_visited_home: bool = false
 @export var has_visited_museum: bool = false
 @export var has_visited_park: bool = false

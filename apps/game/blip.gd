@@ -27,4 +27,3 @@ func _process(delta: float) -> void:
 		
 		# Optional: Add rotation for extra visual appeal
 		child.rotate_y(rotation_speed * delta)
-

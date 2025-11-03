@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://cfsilolpx8bke" path="res://Scenes/Components/Collectable.tscn" id="8_wxeen"]
 [ext_resource type="PackedScene" uid="uid://cl2jeye5b416f" path="res://Assets/MeshLibrary/Book/Book.glb" id="9_x5ty3"]
 [ext_resource type="Script" path="res://Scripts/MeshLibrary/Book.gd" id="10_anxci"]
-[ext_resource type="PackedScene" uid="uid://ccum0pahu2mhu" path="res://blip.tscn" id="14_q270w"]
+[ext_resource type="PackedScene" uid="uid://bp7nckvji1n72" path="res://blip.tscn" id="14_q270w"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ur41"]
 albedo_color = Color(0.117182, 0.455863, 0.196911, 1)
