@@ -17,6 +17,8 @@ var player_movement: Vector3
 @export var latte_obtained: bool = false
 @export var has_obtained_all_items: bool = false
 
+var player_is_talking: bool = false 
+
 @export var coin_count: int = 0
 func _ready():
 	pass
@@ -31,3 +33,9 @@ func set_player_movement(velocity: Vector3):
 
 func get_player_movement():
 	return player_movement
+
+func set_player_is_talking(is_talking: bool):
+	player_is_talking = is_talking
+
+func get_player_is_talking() -> bool:
+	return player_is_talking
