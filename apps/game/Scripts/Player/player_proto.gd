@@ -2,6 +2,11 @@ extends CharacterBody3D
 
 const SPEED:int = 5.0
 const JUMP_VELOCITY:int = 5.5
+var additional_speed:int = 0
+
+# Calculate modified speed dynamically
+func get_modified_speed() -> float:
+	return SPEED + additional_speed
 
 @onready var camera: Camera3D = $CameraRoot/CamYaw/CamPitch/CamRoll/Camera3D
 @onready var UserInterface: Node = $CameraRoot/CamYaw/CamPitch/CamRoll/Camera3D/UserInterface
@@ -43,16 +48,18 @@ func _physics_process(delta: float) -> void:
 	var direction = (cam_forward * -input_dir.y + cam_right * input_dir.x).normalized()
 	
 	if direction and GameManager.get_player_is_talking() == false:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
+		velocity.x = direction.x * get_modified_speed()
+		velocity.z = direction.z * get_modified_speed()
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0, get_modified_speed())
+		velocity.z = move_toward(velocity.z, 0, get_modified_speed())
 
 	move_and_slide()
 
 func _process(_delta):
-	pass
+	if GameManager.giveplayerspeed == true:
+		add_speed_boost()
+		GameManager.giveplayerspeed = false
 		
 
 func jump():
@@ -69,3 +76,9 @@ func _on_controller_body_entered(_body:Node3D) -> void:
 
 func _on_book_body_entered(_body:Node3D) -> void:
 	ToastLabel.text = "Book Obtained!"
+
+func add_speed_boost():
+	print("Adding speed boost! Current speed: %d -> %d" % [get_modified_speed(), get_modified_speed() + 2])
+	additional_speed += 2
+	if ToastLabel:
+		ToastLabel.text = "Speed Boost! Current Speed: %d" % get_modified_speed()

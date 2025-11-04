@@ -3,7 +3,8 @@ extends Node
 signal state_changed(new_state: String)
 
 var player_state: State
-var player_movement: Vector3 
+var player_movement: Vector3
+
 
 @export var has_visited_home: bool = false
 @export var has_visited_museum: bool = false
@@ -16,6 +17,8 @@ var player_movement: Vector3
 @export var cowboy_hat_obtained: bool = false
 @export var latte_obtained: bool = false
 @export var has_obtained_all_items: bool = false
+
+var giveplayerspeed: bool = false
 
 var player_is_talking: bool = false 
 
@@ -39,3 +42,7 @@ func set_player_is_talking(is_talking: bool):
 
 func get_player_is_talking() -> bool:
 	return player_is_talking
+
+func add_to_players_speed():
+	giveplayerspeed = true
+	print("player method called")

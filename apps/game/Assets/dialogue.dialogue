@@ -1,7 +1,9 @@
 ~ start
 set GameManager.player_is_talking = true
+
 Dev: Hello! Welcome to my [wave]awesome[/wave] site.
-Dev: This is a sneak peek at what is to come. 
+Dev: I am a software developer from Dallas, TX
 	I made this to easily share my passions and life experiences in an immersive way.
+	
 set GameManager.player_is_talking = false
 => END
