@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://Scripts/Worlds/Overworld.gd" id="1_7l1e4"]
 [ext_resource type="PackedScene" uid="uid://bejbfo8bm6p8h" path="res://Scenes/Player/PlayerProto.tscn" id="2_weqn2"]
-[ext_resource type="Texture2D" uid="uid://c250li12wu6bm" path="res://Assets/UI/5.jpg" id="3_kw6n8"]
 [ext_resource type="PackedScene" uid="uid://p2rqlo65t5ej" path="res://Assets/MeshLibrary/Sign/Sign.glb" id="4_j061y"]
 [ext_resource type="PackedScene" uid="uid://c7h1v6p58ebg8" path="res://Scenes/Components/Interactable.tscn" id="5_ge6v4"]
 [ext_resource type="Script" path="res://Scripts/MeshLibrary/Sign.gd" id="5_kotji"]
@@ -13,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://cfsilolpx8bke" path="res://Scenes/Components/Collectable.tscn" id="8_wxeen"]
 [ext_resource type="PackedScene" uid="uid://cl2jeye5b416f" path="res://Assets/MeshLibrary/Book/Book.glb" id="9_x5ty3"]
 [ext_resource type="Script" path="res://Scripts/MeshLibrary/Book.gd" id="10_anxci"]
+[ext_resource type="Texture2D" uid="uid://cxpffsfvv6a4v" path="res://Assets/UI/ps1-ps2-era-skybox-i-made-using-vertex-painting-v0-3xzwmrfq1tnb1.webp" id="13_fd66y"]
 [ext_resource type="PackedScene" uid="uid://ccum0pahu2mhu" path="res://blip.tscn" id="14_q270w"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ur41"]
@@ -59,7 +59,7 @@ radius = 20.0
 radius = 6.53314
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_0lwss"]
-panorama = ExtResource("3_kw6n8")
+panorama = ExtResource("13_fd66y")
 
 [sub_resource type="Sky" id="Sky_rq5pd"]
 sky_material = SubResource("PanoramaSkyMaterial_0lwss")
@@ -99,7 +99,7 @@ height = 14.6403
 material = SubResource("StandardMaterial3D_7ur41")
 
 [node name="Platform2" type="CSGCylinder3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 5.78788, 0, 0, 0, 1, -2, -5.63094, -19.1087)
+transform = Transform3D(1, 0, 0, 0, 16.9826, 0, 0, 0, 1, -2, -16.6828, -19.1087)
 use_collision = true
 collision_layer = 2
 radius = 32.6485
@@ -135,55 +135,55 @@ sides = 20
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.3857, 0, -22.7747)
 
 [node name="Platform" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(0.866025, -0.5, 0, 0.5, 0.866025, 0, 0, 0, 1, -1.82782, 1.63769, -7.37237)
-size = Vector3(3.63818, 0.287598, 1)
+transform = Transform3D(0.612372, -0.353553, 0.707107, 0.5, 0.866025, 0, -0.612372, 0.353553, 0.707107, -5.60045, 1.79087, -7.55997)
+size = Vector3(8.05984, 0.287598, 1)
 
 [node name="Platform2" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.98827, 3.00633, -7.37237)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.643768, 4.36405, -11.6742)
 size = Vector3(3.63818, 0.287598, 1)
 
 [node name="Platform3" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.98827, 3.33112, -9.29887)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.643768, 4.68884, -13.6007)
 size = Vector3(3.63818, 0.287598, 1)
 
 [node name="Platform4" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.98827, 3.93574, -11.3206)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.643768, 5.29346, -15.6224)
 size = Vector3(3.63818, 0.287598, 1)
 
 [node name="Platform5" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.92366, 4.93574, -14.0461)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.53511, 5.57811, -18.5317)
 size = Vector3(9.41333, 0.287598, 1)
 
 [node name="Platform6" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(-4.37114e-08, 0, -1, -0.258819, 0.965926, 1.13133e-08, 0.965926, 0.258819, -4.2222e-08, 10.1359, 6.27788, -19.3172)
+transform = Transform3D(-4.37114e-08, 0, -1, -0.258819, 0.965926, 1.13133e-08, 0.965926, 0.258819, -4.2222e-08, 5.74735, 6.92025, -23.8028)
 size = Vector3(9.41333, 0.287598, 1)
 
 [node name="Platform7" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(1, 0, -3.55271e-15, 0, 1, 8.88178e-16, 7.10543e-15, 0, 1, 9.39407, 7.98178, -24.4788)
+transform = Transform3D(1, 0, -3.55271e-15, 0, 1, 8.88178e-16, 7.10543e-15, 0, 1, 5.00552, 8.62415, -28.9644)
 size = Vector3(2.39313, 0.287598, 1)
 
 [node name="Platform8" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(1, 0, -3.55271e-15, 0, 1, 8.88178e-16, 7.10543e-15, 0, 1, 4.39407, 7.98178, -24.4788)
+transform = Transform3D(1, 0, -3.55271e-15, 0, 1, 8.88178e-16, 7.10543e-15, 0, 1, 0.00551987, 8.62415, -28.9644)
 size = Vector3(2.39313, 0.287598, 1)
 
 [node name="Platform9" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(1, 0, -3.55271e-15, 0, 1, 8.88178e-16, 7.10543e-15, 0, 1, -0.605932, 7.98178, -24.4788)
+transform = Transform3D(1, 0, -3.55271e-15, 0, 1, 8.88178e-16, 7.10543e-15, 0, 1, -4.99448, 8.62415, -28.9644)
 size = Vector3(2.39313, 0.287598, 1)
 
 [node name="Platform10" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 8.88178e-16, -1, 0, -4.37114e-08, -0.605932, 7.98178, -25.369)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 8.88178e-16, -1, 0, -4.37114e-08, -4.99448, 8.62415, -29.8546)
 size = Vector3(0.527496, 0.287598, 1)
 
 [node name="Platform11" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 8.88178e-16, -1, 0, -4.37114e-08, -0.605932, 8.50939, -26.8872)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 8.88178e-16, -1, 0, -4.37114e-08, -4.99448, 9.15176, -31.3728)
 size = Vector3(0.527496, 0.287598, 1)
 
 [node name="Platform12" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 8.88178e-16, -1, 0, -4.37114e-08, -0.605932, 8.80809, -28.8034)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 8.88178e-16, -1, 0, -4.37114e-08, -4.99448, 9.45046, -33.289)
 size = Vector3(0.527496, 0.287598, 1)
 
 [node name="Platform13" type="CSGBox3D" parent="CSGCombiner3D/Platforming Section"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 8.88178e-16, -1, 0, -4.37114e-08, -0.605932, 8.80809, -31.8034)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 8.88178e-16, -1, 0, -4.37114e-08, -4.99448, 9.45046, -36.289)
 size = Vector3(0.527496, 0.287598, 1)
 
 [node name="Building" type="CSGCombiner3D" parent="CSGCombiner3D"]
@@ -208,31 +208,38 @@ material = SubResource("StandardMaterial3D_iml0a")
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="CSGCombiner3D"]
 
-[node name="CSGCombiner3D2" type="CSGCombiner3D" parent="CSGCombiner3D"]
+[node name="Spheres" type="CSGCombiner3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00193453, 0.00281525, -0.00204086)
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="CSGCombiner3D/CSGCombiner3D2"]
+[node name="CSGSphere3D" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
 transform = Transform3D(2.924, 0, 0, 0, 2.924, 0, 0, 0, 2.924, 14.239, -0.943661, -6.92334)
 
-[node name="CSGSphere3D3" type="CSGSphere3D" parent="CSGCombiner3D/CSGCombiner3D2"]
+[node name="CSGSphere3D3" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
 transform = Transform3D(2.924, 0, 0, 0, 2.924, 0, 0, 0, 2.924, 16.239, -0.943661, -6.92334)
 
-[node name="CSGSphere3D2" type="CSGSphere3D" parent="CSGCombiner3D/CSGCombiner3D2"]
+[node name="CSGSphere3D2" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
 transform = Transform3D(3.8012, 0, 0, 0, 3.8012, 0, 0, 0, 3.8012, 14.239, -0.943661, -5.10945)
 
-[node name="CSGSphere3D4" type="CSGSphere3D" parent="CSGCombiner3D/CSGCombiner3D2"]
+[node name="CSGSphere3D4" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
 transform = Transform3D(5.32168, 0, 0, 0, 5.32168, 0, 0, 0, 5.32168, 17.5104, -0.943661, -1.65037)
 
-[node name="CSGSphere3D5" type="CSGSphere3D" parent="CSGCombiner3D/CSGCombiner3D2"]
+[node name="CSGSphere3D5" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
 transform = Transform3D(5.32168, 0, 0, 0, 5.32168, 0, 0, 0, 5.32168, 28.6169, 0.102924, -1.65037)
 
-[node name="CSGSphere3D6" type="CSGSphere3D" parent="CSGCombiner3D/CSGCombiner3D2"]
+[node name="CSGSphere3D6" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
 transform = Transform3D(5.32168, 0, 0, 0, 5.32168, 0, 0, 0, 5.32168, 34.3996, 3.93473, -1.65037)
 
-[node name="CSGSphere3D7" type="CSGSphere3D" parent="CSGCombiner3D/CSGCombiner3D2"]
+[node name="CSGSphere3D7" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
 transform = Transform3D(7.45035, 0, 0, 0, 7.45035, 0, 0, 0, 7.45035, 23.5003, 3.93473, 6.11552)
 
-[node name="CSGSphere3D8" type="CSGSphere3D" parent="CSGCombiner3D/CSGCombiner3D2"]
+[node name="CSGSphere3D8" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
 transform = Transform3D(13.4106, 0, 0, 0, 13.4106, 0, 0, 0, 13.4106, 16.2064, -2.62735, 6.11552)
+
+[node name="CSGSphere3D9" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
+transform = Transform3D(13.4106, 0, 0, 0, 13.4106, 0, 0, 0, 13.4106, 4.84813, -16.9598, 9.78758)
+
+[node name="CSGSphere3D10" type="CSGSphere3D" parent="CSGCombiner3D/Spheres"]
+transform = Transform3D(13.4106, 0, 0, 0, 13.4106, 0, 0, 0, 13.4106, -14.6172, -25.2104, 8.27334)
 
 [node name="HomeZone" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.0242, 0, -6.40842)
@@ -254,7 +261,7 @@ shape = SubResource("CylinderShape3D_ooa2t")
 [node name="Collectables" type="Node3D" parent="."]
 
 [node name="Guitar" parent="Collectables" instance=ExtResource("8_wxeen")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 15.7529, 9.93457, -54.5336)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 11.3644, 10.5769, -59.0192)
 script = ExtResource("6_rfvee")
 
 [node name="blockbench_export" parent="Collectables/Guitar" instance=ExtResource("6_wcpxl")]

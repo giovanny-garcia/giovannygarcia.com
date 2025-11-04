@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bejbfo8bm6p8h"]
+[gd_scene load_steps=15 format=3 uid="uid://bejbfo8bm6p8h"]
 
 [ext_resource type="Script" path="res://Scripts/Player/player_proto.gd" id="1_x5qvt"]
 [ext_resource type="PackedScene" uid="uid://b5savnorj4t0q" path="res://Scenes/Player/UserInterface.tscn" id="2_hjvrl"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" path="res://Scripts/Player/Running.gd" id="9_gorp3"]
 [ext_resource type="Script" path="res://Scenes/Player/InteractZone.gd" id="10_r3fi5"]
 [ext_resource type="Script" path="res://Scripts/Player/Talking.gd" id="10_tnhb0"]
+[ext_resource type="Script" path="res://Scripts/Player/CameraController.gd" id="12_0g625"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gso6v"]
 
@@ -28,26 +29,6 @@ shape = SubResource("CapsuleShape3D_gso6v")
 [node name="Torso" type="Node3D" parent="."]
 
 [node name="Legs" type="Node3D" parent="."]
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.999996, 0.00148691, 0.00225755, -0.00201955, 0.966065, 0.25829, -0.00179689, -0.258294, 0.966065, 0, 3, 6)
-
-[node name="UserInterface" parent="Camera3D" instance=ExtResource("2_hjvrl")]
-y_sort_enabled = true
-
-[node name="MultiTouchScreenButton" parent="Camera3D" instance=ExtResource("3_7ebm3")]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -260.0
-offset_top = -226.0
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 0
-grow_vertical = 0
-action = "JUMP"
 
 [node name="AnimationHandler" parent="." instance=ExtResource("2_rw8o3")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -1, 0)
@@ -77,5 +58,34 @@ script = ExtResource("10_r3fi5")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(5.4, 0, 0, 0, 5.4, 0, 0, 0, 5.4, 0, 0, 0)
 shape = SubResource("SphereShape3D_5ujq3")
+
+[node name="CameraRoot" type="Node3D" parent="."]
+script = ExtResource("12_0g625")
+
+[node name="CamYaw" type="Node3D" parent="CameraRoot"]
+
+[node name="CamPitch" type="Node3D" parent="CameraRoot/CamYaw"]
+
+[node name="CamRoll" type="Node3D" parent="CameraRoot/CamYaw/CamPitch"]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRoot/CamYaw/CamPitch/CamRoll"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.81679, 7.18843)
+
+[node name="UserInterface" parent="CameraRoot/CamYaw/CamPitch/CamRoll/Camera3D" instance=ExtResource("2_hjvrl")]
+y_sort_enabled = true
+
+[node name="MultiTouchScreenButton" parent="CameraRoot/CamYaw/CamPitch/CamRoll/Camera3D" instance=ExtResource("3_7ebm3")]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -226.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+grow_vertical = 0
+action = "JUMP"
 
 [editable path="AnimationHandler"]
