@@ -174,16 +174,16 @@ export default function World() {
               {nearby && exploring && (
                 <motion.div
                   key={nearby.id}
-                  initial={{ opacity: 0, y: 8 }}
+                  initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 4 }}
-                  className="pointer-events-none absolute z-30 -translate-x-1/2"
+                  className="pointer-events-none absolute z-30 flex -translate-x-1/2 justify-center"
                   style={{
                     left: `${nearby.x}%`,
-                    top: `calc(${nearby.y}% - 5.5rem)`,
+                    top: `calc(${nearby.y}% - 7.25rem)`,
                   }}
                 >
-                  <div className="rounded-full border border-accent/40 bg-bg-primary/90 px-3 py-1 font-mono text-[10px] tracking-wide text-accent shadow-lg backdrop-blur-md md:text-[11px]">
+                  <div className="whitespace-nowrap rounded-full border border-accent/40 bg-bg-primary/90 px-3 py-1 text-center font-mono text-[10px] tracking-wide text-accent shadow-lg backdrop-blur-md md:text-[11px]">
                     Nearby · {nearby.title}
                   </div>
                 </motion.div>
