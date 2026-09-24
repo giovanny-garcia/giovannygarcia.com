@@ -52,10 +52,10 @@ export const worldStations: WorldStation[] = [
     tagline: "Playable build",
     kind: "playable",
     description:
-      "A Godot 4.3 game written in GDScript, exported for the browser, and shipped on itch.io. Load it here, play, then step back into the floor.",
-    tags: ["Godot 4.3", "GDScript", "Web"],
+      "A Godot 4.3 game written in GDScript and exported for the browser. The build is hosted on this site so it starts faster — play here, then step back onto the floor. Also on itch.io.",
+    tags: ["Godot 4.3", "GDScript", "Web", "Self-hosted"],
     liveUrl: "https://cry0smith.itch.io/tiles-ascend",
-    embedUrl: "https://itch.io/embed-upload/16870982?color=f77c13",
+    embedUrl: "/tiles-ascend/index.html",
     engine: "Godot 4.3",
     image: tilesAscendImg,
     x: 38,

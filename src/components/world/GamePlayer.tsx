@@ -109,6 +109,7 @@ export default function GamePlayer({ game, onExit }: GamePlayerProps) {
               src={game.embedUrl}
               title={`${game.title} — playable build`}
               className="absolute inset-0 h-full w-full border-0"
+              allow="autoplay; fullscreen; gamepad; keyboard-map; cross-origin-isolated"
               allowFullScreen
             />
           </div>
