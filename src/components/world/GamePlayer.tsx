@@ -6,10 +6,10 @@ import {
   HiX,
   HiArrowLeft,
 } from "react-icons/hi";
-import type { PlayableGame } from "../../data/games";
+import type { PlayableStation } from "../../data/world";
 
 interface GamePlayerProps {
-  game: PlayableGame;
+  game: PlayableStation;
   onExit: () => void;
 }
 
@@ -40,7 +40,7 @@ export default function GamePlayer({ game, onExit }: GamePlayerProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.28 }}
       className="fixed inset-0 z-[70] flex flex-col bg-bg-primary"
     >
       <header className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-bg-secondary/95 px-4 py-3 backdrop-blur-md md:px-6">
@@ -51,7 +51,7 @@ export default function GamePlayer({ game, onExit }: GamePlayerProps) {
             className="flex items-center gap-2 rounded-lg border border-border bg-bg-card px-3 py-2 text-sm font-medium text-text-primary transition-colors hover:border-accent/40 hover:bg-accent-glow hover:text-accent"
           >
             <HiArrowLeft size={16} />
-            <span className="hidden sm:inline">Back to workspace</span>
+            <span className="hidden sm:inline">Back to floor</span>
             <span className="sm:hidden">Back</span>
           </button>
           <div className="min-w-0">
@@ -115,9 +115,9 @@ export default function GamePlayer({ game, onExit }: GamePlayerProps) {
         </div>
 
         <p className="mt-4 max-w-xl text-center text-sm text-text-secondary">
-          When you are finished, hit{" "}
-          <span className="font-mono text-accent">Back to workspace</span> to
-          return to the interactive floor — the site stays put.
+          Finished? Hit{" "}
+          <span className="font-mono text-accent">Back to floor</span> to keep
+          exploring the site.
         </p>
       </div>
     </motion.div>

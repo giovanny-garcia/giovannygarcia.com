@@ -1,27 +1,11 @@
-import { PortfolioModeProvider } from "./context/PortfolioModeProvider";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Projects from "./components/Projects";
-import About from "./components/About";
-import Skills from "./components/Skills";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
-import WorkspaceShell from "./components/workspace/WorkspaceShell";
+import { WorldModeProvider } from "./context/WorldModeProvider";
+import World from "./components/world/World";
 
 function App() {
   return (
-    <PortfolioModeProvider>
-      <div className="min-h-dvh bg-bg-primary">
-        <Navbar />
-        <Hero />
-        <Projects />
-        <About />
-        <Skills />
-        <Contact />
-        <Footer />
-        <WorkspaceShell />
-      </div>
-    </PortfolioModeProvider>
+    <WorldModeProvider>
+      <World />
+    </WorldModeProvider>
   );
 }
 
