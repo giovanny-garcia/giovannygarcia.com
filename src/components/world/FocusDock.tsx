@@ -44,8 +44,8 @@ export default function FocusDock({ station, onClose, onPlay }: FocusDockProps) 
       className="absolute z-30 flex w-[min(92%,20.5rem)] -translate-x-1/2 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0e0e16]/95 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl md:w-[22rem]"
       style={{ maxHeight: "min(48vh, 28rem)" }}
     >
-      <div className="flex shrink-0 items-start justify-between gap-3 border-b border-white/8 px-4 py-3">
-        <div className="min-w-0 flex-1 text-center">
+      <div className="relative flex shrink-0 items-center justify-center border-b border-white/8 px-4 py-3">
+        <div className="min-w-0 px-8 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
             {station.tagline}
           </p>
@@ -57,7 +57,7 @@ export default function FocusDock({ station, onClose, onPlay }: FocusDockProps) 
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="shrink-0 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-white/5 hover:text-text-primary"
+          className="absolute top-1/2 right-3 -translate-y-1/2 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-white/5 hover:text-text-primary"
         >
           <HiX size={18} />
         </button>
