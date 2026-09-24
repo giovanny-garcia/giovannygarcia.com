@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { HiPlay, HiArrowsExpand, HiExternalLink } from "react-icons/hi";
 
 const ITCH_GAME_URL = "https://cry0smith.itch.io/tiles-ascend";
-const ITCH_EMBED_URL = "https://itch.io/embed-upload/16870982?color=f77c13";
+const LOCAL_GAME_URL = "/tiles-ascend/index.html";
 
 export default function GameEmbed() {
   const [activated, setActivated] = useState(false);
@@ -31,7 +31,7 @@ export default function GameEmbed() {
         Play Tiles Ascend
       </h3>
       <p className="mb-8 text-text-secondary">
-        The web export, loaded from itch.io when you start it.
+        Hosted here — the web export loads when you start it.
       </p>
 
       {/* Landscape hint on small portrait screens */}
@@ -59,16 +59,17 @@ export default function GameEmbed() {
                 Tap to Play
               </span>
               <span className="text-xs text-text-muted">
-                Click to load Tiles Ascend from itch.io
+                Loads the game files from this site (~84 MB first time)
               </span>
             </motion.button>
           )}
 
           {activated && (
             <iframe
-              src={ITCH_EMBED_URL}
+              src={LOCAL_GAME_URL}
               title="Tiles Ascend — Godot 4.3 Game"
               className="absolute inset-0 h-full w-full border-0"
+              allow="autoplay; fullscreen; gamepad; keyboard-map"
               allowFullScreen
             />
           )}
