@@ -173,7 +173,7 @@ export default function World() {
             <AnimatePresence>
               {nearby && exploring && (
                 <motion.div
-                  key={nearby.id}
+                  key={`badge-${nearby.id}`}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 4 }}
@@ -187,6 +187,17 @@ export default function World() {
                     Nearby · {nearby.title}
                   </div>
                 </motion.div>
+              )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {inspecting && exploring && (
+                <FocusDock
+                  key="focus-dock"
+                  station={inspecting}
+                  onClose={closeDock}
+                  onPlay={playGame}
+                />
               )}
             </AnimatePresence>
           </div>
@@ -221,14 +232,6 @@ export default function World() {
             <PadButton label="→" onVector={setPad} vec={{ x: 1, y: 0 }} />
           </div>
         </div>
-      )}
-
-      {inspecting && exploring && (
-        <FocusDock
-          station={inspecting}
-          onClose={closeDock}
-          onPlay={playGame}
-        />
       )}
 
       <AnimatePresence>
