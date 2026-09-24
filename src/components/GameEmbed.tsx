@@ -1,11 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { HiPlay, HiArrowsExpand, HiExternalLink } from "react-icons/hi";
+import {
+  HiPlay,
+  HiArrowsExpand,
+  HiExternalLink,
+  HiCubeTransparent,
+} from "react-icons/hi";
+import { getPlayableGame } from "../data/games";
+import { usePortfolioMode } from "../context/usePortfolioMode";
 
-const ITCH_GAME_URL = "https://cry0smith.itch.io/tiles-ascend";
-const ITCH_EMBED_URL = "https://itch.io/embed-upload/16870982?color=f77c13";
+const tilesAscend = getPlayableGame("tiles-ascend")!;
 
 export default function GameEmbed() {
+  const { enterWorkspace, playGame } = usePortfolioMode();
   const [activated, setActivated] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,9 +20,9 @@ export default function GameEmbed() {
   const toggleFullscreen = useCallback(() => {
     if (!containerRef.current) return;
     if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen();
+      void containerRef.current.requestFullscreen();
     } else {
-      document.exitFullscreen();
+      void document.exitFullscreen();
     }
   }, []);
 
@@ -27,14 +34,29 @@ export default function GameEmbed() {
 
   return (
     <div id="game" className="mt-16">
-      <h3 className="mb-2 font-heading text-2xl font-bold tracking-tight text-text-primary">
-        Play Tiles Ascend
-      </h3>
-      <p className="mb-8 text-text-secondary">
-        The web export, loaded from itch.io when you start it.
-      </p>
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h3 className="mb-2 font-heading text-2xl font-bold tracking-tight text-text-primary">
+            Play Tiles Ascend
+          </h3>
+          <p className="text-text-secondary">
+            Inline preview from itch.io — or open the workspace for the full
+            enter / play / return loop.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            enterWorkspace();
+            playGame("tiles-ascend");
+          }}
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-accent/30 bg-accent-glow px-4 py-2.5 font-heading text-sm font-semibold text-accent transition-all hover:border-accent/60 hover:bg-accent/10"
+        >
+          <HiCubeTransparent size={16} />
+          Open in workspace
+        </button>
+      </div>
 
-      {/* Landscape hint on small portrait screens */}
       <p className="mb-4 text-center text-xs text-text-muted sm:hidden">
         For the best experience, rotate your device to landscape.
       </p>
@@ -43,10 +65,10 @@ export default function GameEmbed() {
         ref={containerRef}
         className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-black"
       >
-        {/* 16:9 aspect ratio container */}
         <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
           {!activated && (
             <motion.button
+              type="button"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               onClick={() => setActivated(true)}
@@ -59,30 +81,29 @@ export default function GameEmbed() {
                 Tap to Play
               </span>
               <span className="text-xs text-text-muted">
-                Click to load Tiles Ascend from itch.io
+                Click to load {tilesAscend.title} from itch.io
               </span>
             </motion.button>
           )}
 
           {activated && (
             <iframe
-              src={ITCH_EMBED_URL}
-              title="Tiles Ascend — Godot 4.3 Game"
+              src={tilesAscend.embedUrl}
+              title={`${tilesAscend.title} — Godot game`}
               className="absolute inset-0 h-full w-full border-0"
               allowFullScreen
             />
           )}
         </div>
 
-        {/* Controls bar */}
         {activated && (
           <div className="flex items-center justify-between border-t border-border bg-bg-card px-4 py-2">
             <span className="font-mono text-xs text-text-muted">
-              Tiles Ascend • Godot 4.3
+              {tilesAscend.title} • {tilesAscend.engine}
             </span>
             <div className="flex items-center gap-3">
               <a
-                href={ITCH_GAME_URL}
+                href={tilesAscend.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-white/5 hover:text-text-primary"
@@ -91,6 +112,7 @@ export default function GameEmbed() {
                 itch.io
               </a>
               <button
+                type="button"
                 onClick={toggleFullscreen}
                 className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-white/5 hover:text-text-primary"
               >
@@ -102,11 +124,10 @@ export default function GameEmbed() {
         )}
       </div>
 
-      {/* Fallback link for small screens */}
       <p className="mt-4 text-center text-xs text-text-muted sm:hidden">
         Having trouble?{" "}
         <a
-          href={ITCH_GAME_URL}
+          href={tilesAscend.liveUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="text-accent underline"

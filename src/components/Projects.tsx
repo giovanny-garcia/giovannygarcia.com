@@ -1,24 +1,39 @@
 import { motion } from "framer-motion";
-import { HiExternalLink, HiCode } from "react-icons/hi";
+import { HiExternalLink, HiCode, HiCubeTransparent } from "react-icons/hi";
 import SectionWrapper from "./SectionWrapper";
 import GameEmbed from "./GameEmbed";
 import { projects, type Project } from "../data/projects";
+import { usePortfolioMode } from "../context/usePortfolioMode";
 
 function hasPublicLink(project: Project) {
   return Boolean(project.github || project.live);
 }
 
 export default function Projects() {
+  const { enterWorkspace } = usePortfolioMode();
   const published = projects.filter(hasPublicLink);
 
   return (
     <SectionWrapper id="work">
-      <h2 className="mb-2 font-heading text-3xl font-bold tracking-tight text-text-primary md:text-4xl">
-        Work
-      </h2>
-      <p className="mb-12 text-text-secondary">
-        Software I've shipped with a public link.
-      </p>
+      <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 className="mb-2 font-heading text-3xl font-bold tracking-tight text-text-primary md:text-4xl">
+            Work
+          </h2>
+          <p className="text-text-secondary">
+            Software I've shipped with a public link — or explore builds in the
+            interactive workspace.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={enterWorkspace}
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-accent/30 bg-accent-glow px-4 py-2.5 font-heading text-sm font-semibold text-accent transition-all hover:border-accent/60 hover:bg-accent/10"
+        >
+          <HiCubeTransparent size={16} />
+          Enter workspace
+        </button>
+      </div>
 
       <div className="grid gap-6">
         {published.map((project, i) => (

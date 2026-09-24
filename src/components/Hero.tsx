@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
-import { HiArrowDown, HiPlay } from "react-icons/hi";
+import { HiArrowDown, HiCubeTransparent } from "react-icons/hi";
+import { usePortfolioMode } from "../context/usePortfolioMode";
 
 export default function Hero() {
+  const { enterWorkspace } = usePortfolioMode();
+
   const scrollTo = (id: string) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -65,11 +68,12 @@ export default function Hero() {
             <HiArrowDown className="transition-transform group-hover:translate-y-0.5" />
           </button>
           <button
-            onClick={() => scrollTo("#game")}
+            type="button"
+            onClick={enterWorkspace}
             className="group flex items-center gap-2 rounded-xl border border-accent/30 bg-accent-glow px-6 py-3 font-heading text-sm font-semibold text-accent transition-all hover:border-accent/60 hover:bg-accent/10"
           >
-            <HiPlay className="transition-transform group-hover:scale-110" />
-            Play Tiles Ascend
+            <HiCubeTransparent className="transition-transform group-hover:scale-110" />
+            Enter workspace
           </button>
         </motion.div>
       </div>

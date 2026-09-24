@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiMenu, HiX } from "react-icons/hi";
+import { HiMenu, HiX, HiCubeTransparent } from "react-icons/hi";
+import { usePortfolioMode } from "../context/usePortfolioMode";
 
 const NAV_LINKS = [
   { label: "Work", href: "#work" },
@@ -10,6 +11,7 @@ const NAV_LINKS = [
 ] as const;
 
 export default function Navbar() {
+  const { enterWorkspace } = usePortfolioMode();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
@@ -84,6 +86,16 @@ export default function Navbar() {
               </button>
             </li>
           ))}
+          <li>
+            <button
+              type="button"
+              onClick={enterWorkspace}
+              className="ml-2 flex items-center gap-1.5 rounded-lg border border-accent/30 bg-accent-glow px-3 py-2 text-sm font-medium text-accent transition-colors hover:border-accent/60 hover:bg-accent/10"
+            >
+              <HiCubeTransparent size={16} />
+              Workspace
+            </button>
+          </li>
         </ul>
 
         {/* Mobile hamburger */}
@@ -121,6 +133,19 @@ export default function Navbar() {
                   </button>
                 </li>
               ))}
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    enterWorkspace();
+                  }}
+                  className="mt-1 flex w-full items-center gap-2 rounded-lg border border-accent/30 bg-accent-glow px-3 py-3 text-left text-base font-medium text-accent"
+                >
+                  <HiCubeTransparent size={18} />
+                  Enter workspace
+                </button>
+              </li>
             </ul>
           </motion.div>
         )}
