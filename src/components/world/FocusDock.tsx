@@ -1,49 +1,71 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { HiExternalLink, HiPlay, HiX } from "react-icons/hi";
-import { FaGithub, FaLinkedin, FaItchIo, FaBluesky } from "react-icons/fa6";
+import {
+  FaGithub,
+  FaLinkedin,
+  FaItchIo,
+  FaBluesky,
+  FaInstagram,
+  FaTwitch,
+} from "react-icons/fa6";
+import type { RefObject } from "react";
 import {
   aboutContent,
   socialLinks,
+  type DockPlacement,
   type WorldStation,
 } from "../../data/world";
 import { logEntries } from "../../data/log";
 import { skillCategories } from "../../data/skills";
+import ElectricBorder from "./ElectricBorder";
+
+/** Phrases wrapped in *asterisks* render in the sky-to-cyan gradient, semibold. */
+function AccentText({ text }: { text: string }) {
+  const parts = text.split(/(\*[^*]+\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
+      return (
+        <span
+          key={i}
+          className="bg-gradient-to-r from-sky-300 to-accent bg-clip-text font-semibold text-transparent"
+        >
+          {part.slice(1, -1)}
+        </span>
+      );
+    }
+    return part;
+  });
+}
 
 const SOCIAL_ICONS = {
   GitHub: FaGithub,
   LinkedIn: FaLinkedin,
   "itch.io": FaItchIo,
   Bluesky: FaBluesky,
+  Instagram: FaInstagram,
+  Twitch: FaTwitch,
 } as const;
 
 interface FocusDockProps {
   station: WorldStation;
+  placement: DockPlacement;
+  dockRef: RefObject<HTMLDivElement | null>;
   onClose: () => void;
   onPlay: (id: string) => void;
 }
 
-export default function FocusDock({ station, onClose, onPlay }: FocusDockProps) {
-  // Keep panel under the station and on-screen
-  const left = Math.min(82, Math.max(18, station.x));
+export default function FocusDock({
+  station,
+  placement,
+  dockRef,
+  onClose,
+  onPlay,
+}: FocusDockProps) {
+  const playable = station.kind === "playable";
+  const { placeBelow, maxHeight } = placement;
 
-  return (
-    <motion.aside
-      role="dialog"
-      aria-label={station.title}
-      initial={{ opacity: 0, y: 12 }}
-      animate={{
-        opacity: 1,
-        y: 0,
-        left: `${left}%`,
-        top: `calc(${station.y}% + 2.75rem)`,
-      }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ type: "spring", stiffness: 320, damping: 28 }}
-      onClick={(e) => e.stopPropagation()}
-      onPointerDown={(e) => e.stopPropagation()}
-      className="absolute z-30 flex w-[min(92%,20.5rem)] -translate-x-1/2 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0e0e16]/95 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl md:w-[22rem]"
-      style={{ maxHeight: "min(48vh, 28rem)" }}
-    >
+  const panel = (
+    <>
       <div className="relative flex shrink-0 items-center justify-center border-b border-white/8 px-4 py-3">
         <div className="min-w-0 px-8 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
@@ -81,16 +103,58 @@ export default function FocusDock({ station, onClose, onPlay }: FocusDockProps) 
             {station.kind === "skills" && <SkillsBody />}
             {station.kind === "links" && <LinksBody />}
             {station.kind === "soon" && (
-              <p className="text-sm leading-relaxed text-text-secondary">
-                Prototype bay for the next playable build. When something is
-                ready to try in the browser, it will appear as a station on this
-                floor.
+              <p className="text-sm leading-relaxed text-sky-300">
+                <AccentText text="Prototype bay for the next *playable* build. When something is ready to try in the browser, it will appear as a *station* on this floor." />
               </p>
             )}
           </motion.div>
         </AnimatePresence>
       </div>
-    </motion.aside>
+    </>
+  );
+
+  return (
+    <div
+      ref={dockRef}
+      onClick={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
+      className="absolute z-30 flex w-[min(92%,20.5rem)] -translate-x-1/2 flex-col md:w-[22rem]"
+      style={{
+        left: placement.left,
+        top: placement.top,
+        bottom: placement.bottom,
+        maxHeight,
+      }}
+    >
+      <motion.aside
+        role="dialog"
+        aria-label={station.title}
+        initial={{ opacity: 0, y: placeBelow ? 12 : -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: placeBelow ? 10 : -10 }}
+        transition={{ type: "spring", stiffness: 320, damping: 28 }}
+        className={
+          playable
+            ? "flex min-h-0 flex-1 flex-col overflow-visible"
+            : "flex min-h-0 max-h-full flex-1 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0e0e16]/95 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl"
+        }
+      >
+        {playable ? (
+          <ElectricBorder
+            borderRadius={16}
+            className="flex min-h-0 w-full flex-1 flex-col"
+            contentClassName="flex min-h-0 flex-1 flex-col"
+            contentStyle={{ height: "auto", minHeight: 0, flex: "1 1 auto" }}
+          >
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0e0e16]/95 shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+              {panel}
+            </div>
+          </ElectricBorder>
+        ) : (
+          panel
+        )}
+      </motion.aside>
+    </div>
   );
 }
 
@@ -110,14 +174,14 @@ function PlayableBody({
           className="mb-3 aspect-video w-full rounded-lg object-cover"
         />
       ) : null}
-      <p className="mb-4 text-sm leading-relaxed text-text-secondary">
-        {station.description}
+      <p className="mb-4 text-sm leading-relaxed text-sky-300">
+        <AccentText text={station.description} />
       </p>
       <div className="mb-4 flex flex-wrap justify-center gap-1.5">
         {station.tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-md bg-white/5 px-2 py-1 font-mono text-[10px] text-text-muted"
+            className="cursor-default select-none rounded-md border border-transparent bg-white/5 px-2 py-1 font-mono text-[10px] text-text-muted transition-[color,background-color,border-color,transform] duration-200 hover:-translate-y-px hover:border-accent/30 hover:bg-accent/10 hover:text-accent"
           >
             {tag}
           </span>
@@ -150,14 +214,14 @@ function AboutBody() {
   return (
     <div className="w-full space-y-3">
       <p className="font-heading text-base font-medium text-text-primary">
-        {aboutContent.headline}
+        <AccentText text={aboutContent.headline} />
       </p>
       {aboutContent.paragraphs.map((p) => (
         <p
           key={p.slice(0, 24)}
-          className="text-sm leading-relaxed text-text-secondary"
+          className="text-sm leading-relaxed text-sky-300"
         >
-          {p}
+          <AccentText text={p} />
         </p>
       ))}
     </div>
@@ -178,8 +242,8 @@ function LogBody() {
           <h3 className="mb-1.5 font-heading text-sm font-semibold text-text-primary">
             {entry.title}
           </h3>
-          <p className="text-sm leading-relaxed text-text-secondary">
-            {entry.body}
+          <p className="text-sm leading-relaxed text-sky-300">
+            <AccentText text={entry.body} />
           </p>
         </article>
       ))}
@@ -192,7 +256,7 @@ function SkillsBody() {
     <div className="w-full space-y-4 text-left">
       {skillCategories.map((cat) => (
         <div key={cat.name}>
-          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.14em] text-text-muted">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.14em] text-accent">
             {cat.name}
           </p>
           <div className="flex flex-wrap justify-center gap-1.5 sm:justify-start">
@@ -214,9 +278,8 @@ function SkillsBody() {
 function LinksBody() {
   return (
     <div className="w-full space-y-3">
-      <p className="mb-1 text-sm leading-relaxed text-text-secondary">
-        Looking for a first software development internship. Best ways to reach
-        me:
+      <p className="mb-1 text-sm leading-relaxed text-sky-300">
+        <AccentText text="Looking for a first *software development internship*. Best ways to reach me:" />
       </p>
       <ul className="space-y-2">
         {socialLinks.map(({ label, href }) => {

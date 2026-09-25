@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import type { WorldStation } from "../../data/world";
+import ElectricBorder from "./ElectricBorder";
 
 interface StationMarkerProps {
   station: WorldStation;
@@ -7,6 +8,7 @@ interface StationMarkerProps {
   nearby: boolean;
   visited: boolean;
   inspecting: boolean;
+  effectsActive: boolean;
   onApproach: (id: string) => void;
 }
 
@@ -16,6 +18,7 @@ export default function StationMarker({
   nearby,
   visited,
   inspecting,
+  effectsActive,
   onApproach,
 }: StationMarkerProps) {
   const playable = station.kind === "playable";
@@ -54,32 +57,25 @@ export default function StationMarker({
           aria-hidden
         />
 
-        <div
-          className={`relative mb-0 flex h-[4.25rem] w-[3.35rem] origin-bottom flex-col items-center justify-end overflow-hidden rounded-t-lg rounded-b-md border transition-[transform,border-color,background-color,box-shadow] duration-300 md:h-[5rem] md:w-16 ${
-            lit ? "scale-110" : "scale-100"
-          } ${
-            lit
-              ? "border-accent bg-accent/20 shadow-[0_0_28px_rgba(0,229,255,0.4)]"
-              : playable
-                ? "border-accent/40 bg-bg-card/85"
-                : visited
-                  ? "border-white/20 bg-bg-card/75"
-                  : "border-border/70 bg-bg-card/55"
-          }`}
-        >
-          <span
-            className={`mb-1.5 h-7 w-10 shrink-0 rounded-sm transition-colors md:h-8 md:w-11 ${
-              lit || playable
-                ? "bg-gradient-to-b from-accent/55 to-accent/5"
-                : "bg-gradient-to-b from-white/12 to-transparent"
+        {playable ? (
+          <ElectricBorder
+            active={effectsActive}
+            borderRadius={8}
+            className={`mb-0 h-[4.25rem] w-[3.35rem] origin-bottom transition-transform duration-300 md:h-[5rem] md:w-16 ${
+              lit ? "scale-110" : "scale-100"
             }`}
-            aria-hidden
-          />
-          <span
-            className={`h-1.5 w-full shrink-0 ${lit || playable ? "bg-accent/70" : "bg-white/10"}`}
-            aria-hidden
-          />
-        </div>
+          >
+            <Cabinet lit={lit} playable visited={visited} />
+          </ElectricBorder>
+        ) : (
+          <div
+            className={`relative mb-0 h-[4.25rem] w-[3.35rem] origin-bottom transition-transform duration-300 md:h-[5rem] md:w-16 ${
+              lit ? "scale-110" : "scale-100"
+            }`}
+          >
+            <Cabinet lit={lit} playable={false} visited={visited} />
+          </div>
+        )}
 
         {/* Labels hang below the floor point, always centered on the pedestal */}
         <div className="absolute top-full left-1/2 mt-2 w-28 -translate-x-1/2 md:w-32">
@@ -100,5 +96,44 @@ export default function StationMarker({
         </div>
       </motion.div>
     </button>
+  );
+}
+
+function Cabinet({
+  lit,
+  playable,
+  visited,
+}: {
+  lit: boolean;
+  playable: boolean;
+  visited: boolean;
+}) {
+  return (
+    <div
+      className={`flex h-full w-full flex-col items-center justify-end overflow-hidden rounded-lg ${
+        playable
+          ? lit
+            ? "bg-[#101018]"
+            : "bg-bg-card/90"
+          : lit
+            ? "rounded-t-lg rounded-b-md border border-accent bg-accent/20 shadow-[0_0_28px_rgba(0,229,255,0.4)]"
+            : visited
+              ? "rounded-t-lg rounded-b-md border border-white/20 bg-bg-card/75"
+              : "rounded-t-lg rounded-b-md border border-border/70 bg-bg-card/55"
+      }`}
+    >
+      <span
+        className={`mb-1.5 h-7 w-10 shrink-0 rounded-sm transition-colors md:h-8 md:w-11 ${
+          lit || playable
+            ? "bg-gradient-to-b from-accent/55 to-accent/5"
+            : "bg-gradient-to-b from-white/12 to-transparent"
+        }`}
+        aria-hidden
+      />
+      <span
+        className={`h-1.5 w-full shrink-0 ${lit || playable ? "bg-accent/70" : "bg-white/10"}`}
+        aria-hidden
+      />
+    </div>
   );
 }

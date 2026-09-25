@@ -43,3 +43,142 @@
     color: var(--color-bg-primary);
   }
 }
+
+@keyframes explorer-bob-walk {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes explorer-bob-idle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+@keyframes explorer-step {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes explorer-ping {
+  0%,
+  100% {
+    opacity: 0.45;
+    scale: 1;
+  }
+  50% {
+    opacity: 0.1;
+    scale: 1.35;
+  }
+}
+
+.explorer-bob-walk {
+  animation: explorer-bob-walk 0.32s ease-in-out infinite;
+}
+
+.explorer-bob-idle {
+  animation: explorer-bob-idle 2.4s ease-in-out infinite;
+}
+
+.explorer-step {
+  animation: explorer-step 0.32s ease-in-out infinite;
+}
+
+.explorer-step-late {
+  animation-delay: 0.16s;
+}
+
+.explorer-ping {
+  animation: explorer-ping 2.2s ease-in-out infinite;
+}
+
+/* Crackling card edge shared with petalgear.com */
+.electric-border {
+  --electric-light-color: var(--electric-border-color);
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  border-radius: var(--eb-radius, 16px);
+}
+
+@supports (color: oklch(from red l c h)) {
+  .electric-border {
+    --electric-light-color: oklch(from var(--electric-border-color) l c h);
+  }
+}
+
+.eb-canvas-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.eb-canvas {
+  display: block;
+}
+
+.eb-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--eb-radius, 16px);
+}
+
+.eb-layers {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: var(--eb-radius, 16px);
+}
+
+.eb-glow-1,
+.eb-glow-2,
+.eb-background-glow {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  border-radius: var(--eb-radius, 16px);
+}
+
+.eb-glow-1 {
+  border: 2px solid color-mix(in srgb, var(--electric-border-color) 60%, transparent);
+  filter: blur(1px);
+}
+
+.eb-glow-2 {
+  border: 2px solid var(--electric-light-color);
+  filter: blur(4px);
+}
+
+.eb-background-glow {
+  z-index: -1;
+  background: linear-gradient(
+    -30deg,
+    var(--electric-light-color),
+    transparent,
+    var(--electric-border-color)
+  );
+  filter: blur(var(--eb-glow, 32px));
+  opacity: 0.3;
+  transform: scale(1.1);
+}

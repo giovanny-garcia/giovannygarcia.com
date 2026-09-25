@@ -1,16 +1,33 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { worldStations } from "../data/world";
+import { WORLD_SCALE, worldStations } from "../data/world";
 
 export interface Vec2 {
   x: number;
   y: number;
 }
 
-const START: Vec2 = { x: 50, y: 72 };
-const BOUNDS = { minX: 10, maxX: 90, minY: 22, maxY: 82 };
-const SPEED = 28;
-const ARRIVE = 1.2;
-const PROXIMITY = 11;
+const BOUNDS = { minX: 6, maxX: 94, minY: 8, maxY: 92 };
+// Tuned in viewport-percent, then scaled so walking speed and reach stay the same on screen.
+const SPEED = 28 / WORLD_SCALE;
+const ARRIVE = 1.2 / WORLD_SCALE;
+const PROXIMITY = 11 / WORLD_SCALE;
+
+const aboutStation = worldStations.find((s) => s.id === "about");
+/** Just to the right of About, close enough for that station to open. */
+const START: Vec2 = aboutStation
+  ? { x: aboutStation.x + 4.5 / WORLD_SCALE, y: aboutStation.y }
+  : { x: 50, y: 68 };
+
+const MOVE_KEYS = [
+  "w",
+  "a",
+  "s",
+  "d",
+  "arrowup",
+  "arrowdown",
+  "arrowleft",
+  "arrowright",
+];
 
 function clamp(v: number, min: number, max: number) {
   return Math.min(max, Math.max(min, v));
@@ -33,29 +50,63 @@ function nearestStation(pos: Vec2) {
   return { id: bestId, distance: bestD };
 }
 
-export function useFloorExplorer(enabled: boolean) {
-  const [pos, setPos] = useState<Vec2>(START);
-  const [facing, setFacing] = useState<-1 | 1>(1);
-  const [moving, setMoving] = useState(false);
-  const [nearbyId, setNearbyId] = useState<string | null>(null);
-  const [visited, setVisited] = useState<Set<string>>(() => new Set());
+export type FloorFrame = (pos: Vec2, moving: boolean) => void;
 
-  const posRef = useRef(pos);
+export function useFloorExplorer(enabled: boolean) {
+  const [facing, setFacing] = useState<-1 | 1>(-1);
+  const [moving, setMoving] = useState(false);
+  const [nearbyId, setNearbyId] = useState<string | null>(() => {
+    const near = nearestStation(START);
+    return near.id && near.distance <= PROXIMITY ? near.id : null;
+  });
+  const [visited, setVisited] = useState<Set<string>>(() => {
+    const near = nearestStation(START);
+    return near.id && near.distance <= PROXIMITY
+      ? new Set([near.id])
+      : new Set();
+  });
+  const [moveTarget, setMoveTarget] = useState<Vec2 | null>(null);
+
+  const posRef = useRef<Vec2>(START);
   const keysRef = useRef(new Set<string>());
   const padRef = useRef({ x: 0, y: 0 });
   const targetRef = useRef<Vec2 | null>(null);
   const rafRef = useRef(0);
   const lastTsRef = useRef(0);
+  const loopRunning = useRef(false);
+  const kickRef = useRef<() => void>(() => {});
+  const onFrameRef = useRef<FloorFrame | null>(null);
+  const facingRef = useRef<-1 | 1>(-1);
+  const movingRef = useRef(false);
+  const enabledRef = useRef(enabled);
+  enabledRef.current = enabled;
 
-  useEffect(() => {
-    posRef.current = pos;
-  }, [pos]);
+  const setFacingIf = useCallback((next: -1 | 1) => {
+    if (facingRef.current === next) return;
+    facingRef.current = next;
+    setFacing(next);
+  }, []);
+
+  const setMovingIf = useCallback((next: boolean) => {
+    if (movingRef.current === next) return false;
+    movingRef.current = next;
+    setMoving(next);
+    return true;
+  }, []);
+
+  const clearMoveTarget = useCallback(() => {
+    targetRef.current = null;
+    setMoveTarget(null);
+  }, []);
 
   const walkTo = useCallback((target: Vec2) => {
-    targetRef.current = {
+    const next = {
       x: clamp(target.x, BOUNDS.minX, BOUNDS.maxX),
       y: clamp(target.y, BOUNDS.minY, BOUNDS.maxY),
     };
+    targetRef.current = next;
+    setMoveTarget(next);
+    kickRef.current();
   }, []);
 
   const walkToStation = useCallback(
@@ -65,7 +116,7 @@ export function useFloorExplorer(enabled: boolean) {
       const dx = station.x - posRef.current.x;
       const dy = station.y - posRef.current.y;
       const len = Math.hypot(dx, dy) || 1;
-      const stopShort = 4.5;
+      const stopShort = 4.5 / WORLD_SCALE;
       walkTo({
         x: station.x - (dx / len) * stopShort,
         y: station.y - (dy / len) * stopShort,
@@ -74,16 +125,22 @@ export function useFloorExplorer(enabled: boolean) {
     [walkTo],
   );
 
-  const setPad = useCallback((x: number, y: number) => {
-    padRef.current = { x, y };
-    if (x !== 0 || y !== 0) targetRef.current = null;
-  }, []);
+  const setPad = useCallback(
+    (x: number, y: number) => {
+      padRef.current = { x, y };
+      if (x !== 0 || y !== 0) {
+        clearMoveTarget();
+        kickRef.current();
+      }
+    },
+    [clearMoveTarget],
+  );
 
   useEffect(() => {
     if (!enabled) {
       keysRef.current.clear();
       padRef.current = { x: 0, y: 0 };
-      targetRef.current = null;
+      clearMoveTarget();
       return;
     }
 
@@ -92,21 +149,11 @@ export function useFloorExplorer(enabled: boolean) {
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
 
       const key = e.key.toLowerCase();
-      if (
-        [
-          "w",
-          "a",
-          "s",
-          "d",
-          "arrowup",
-          "arrowdown",
-          "arrowleft",
-          "arrowright",
-        ].includes(key)
-      ) {
+      if (MOVE_KEYS.includes(key)) {
         e.preventDefault();
         keysRef.current.add(key);
-        targetRef.current = null;
+        clearMoveTarget();
+        kickRef.current();
       }
     };
 
@@ -120,12 +167,25 @@ export function useFloorExplorer(enabled: boolean) {
       window.removeEventListener("keydown", onDown);
       window.removeEventListener("keyup", onUp);
     };
-  }, [enabled]);
+  }, [enabled, clearMoveTarget]);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) {
+      cancelAnimationFrame(rafRef.current);
+      loopRunning.current = false;
+      lastTsRef.current = 0;
+      if (movingRef.current) {
+        movingRef.current = false;
+        setMoving(false);
+      }
+      return;
+    }
+
+    let cancelled = false;
 
     const tick = (ts: number) => {
+      if (cancelled) return;
+
       const last = lastTsRef.current || ts;
       const dt = Math.min(0.05, (ts - last) / 1000);
       lastTsRef.current = ts;
@@ -140,37 +200,40 @@ export function useFloorExplorer(enabled: boolean) {
       if (keys.has("a") || keys.has("arrowleft")) dx -= 1;
       if (keys.has("d") || keys.has("arrowright")) dx += 1;
 
+      let movingChanged = false;
+
       if (dx !== 0 || dy !== 0) {
         const len = Math.hypot(dx, dy) || 1;
         x += (dx / len) * SPEED * dt;
         y += (dy / len) * SPEED * dt;
-        if (dx < 0) setFacing(-1);
-        else if (dx > 0) setFacing(1);
-        setMoving(true);
+        if (dx < 0) setFacingIf(-1);
+        else if (dx > 0) setFacingIf(1);
+        movingChanged = setMovingIf(true);
       } else if (targetRef.current) {
         const t = targetRef.current;
         const tdx = t.x - x;
         const tdy = t.y - y;
         const d = Math.hypot(tdx, tdy);
         if (d <= ARRIVE) {
-          targetRef.current = null;
-          setMoving(false);
+          clearMoveTarget();
+          movingChanged = setMovingIf(false);
         } else {
           x += (tdx / d) * SPEED * dt;
           y += (tdy / d) * SPEED * dt;
-          setFacing(tdx < 0 ? -1 : 1);
-          setMoving(true);
+          setFacingIf(tdx < 0 ? -1 : 1);
+          movingChanged = setMovingIf(true);
         }
       } else {
-        setMoving(false);
+        movingChanged = setMovingIf(false);
       }
 
       x = clamp(x, BOUNDS.minX, BOUNDS.maxX);
       y = clamp(y, BOUNDS.minY, BOUNDS.maxY);
 
-      if (x !== posRef.current.x || y !== posRef.current.y) {
-        posRef.current = { x, y };
-        setPos({ x, y });
+      const moved = x !== posRef.current.x || y !== posRef.current.y;
+      if (moved) posRef.current = { x, y };
+      if (moved || movingChanged) {
+        onFrameRef.current?.(posRef.current, movingRef.current);
       }
 
       const near = nearestStation(posRef.current);
@@ -185,24 +248,46 @@ export function useFloorExplorer(enabled: boolean) {
         });
       }
 
+      const idle =
+        keysRef.current.size === 0 &&
+        padRef.current.x === 0 &&
+        padRef.current.y === 0 &&
+        targetRef.current === null;
+
+      if (cancelled || idle) {
+        loopRunning.current = false;
+        return;
+      }
+
       rafRef.current = requestAnimationFrame(tick);
     };
 
-    rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(rafRef.current);
+    kickRef.current = () => {
+      if (cancelled || !enabledRef.current || loopRunning.current) return;
+      loopRunning.current = true;
       lastTsRef.current = 0;
+      rafRef.current = requestAnimationFrame(tick);
     };
-  }, [enabled]);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafRef.current);
+      loopRunning.current = false;
+      lastTsRef.current = 0;
+      kickRef.current = () => {};
+    };
+  }, [enabled, clearMoveTarget, setFacingIf, setMovingIf]);
 
   return {
-    pos,
+    posRef,
+    onFrameRef,
     facing,
     moving,
     nearbyId,
     visited,
     walkTo,
     walkToStation,
+    moveTarget,
     setPad,
     bounds: BOUNDS,
   };

@@ -95,31 +95,20 @@ export default function GamePlayer({ game, onExit }: GamePlayerProps) {
         </div>
       </header>
 
-      <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center p-3 sm:p-6">
-        <p className="mb-3 text-center text-xs text-text-muted sm:hidden">
+      <div className="relative flex min-h-0 flex-1 flex-col">
+        <p className="pointer-events-none absolute inset-x-0 top-2 z-10 text-center text-xs text-text-muted sm:hidden">
           Rotate to landscape for the best play experience.
         </p>
 
-        <div
-          ref={stageRef}
-          className="relative w-full max-w-5xl overflow-hidden rounded-xl border border-border bg-black shadow-2xl shadow-black/50"
-        >
-          <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-            <iframe
-              src={game.embedUrl}
-              title={`${game.title} — playable build`}
-              className="absolute inset-0 h-full w-full border-0"
-              allow="autoplay; fullscreen; gamepad; keyboard-map; cross-origin-isolated"
-              allowFullScreen
-            />
-          </div>
+        <div ref={stageRef} className="relative min-h-0 w-full flex-1 bg-black">
+          <iframe
+            src={game.embedUrl}
+            title={`${game.title} — playable build`}
+            className="absolute inset-0 h-full w-full border-0"
+            allow="autoplay; fullscreen; gamepad; keyboard-map; cross-origin-isolated"
+            allowFullScreen
+          />
         </div>
-
-        <p className="mt-4 max-w-xl text-center text-sm text-text-secondary">
-          Finished? Hit{" "}
-          <span className="font-mono text-accent">Back to floor</span> to keep
-          exploring the site.
-        </p>
       </div>
     </motion.div>
   );
