@@ -11,10 +11,12 @@ import {
 import type { RefObject } from "react";
 import {
   aboutContent,
+  guitarContent,
   socialLinks,
   type DockPlacement,
   type WorldStation,
 } from "../../data/world";
+import { blogPosts } from "../../data/blog";
 import { logEntries } from "../../data/log";
 import { skillCategories } from "../../data/skills";
 import ElectricBorder from "./ElectricBorder";
@@ -102,6 +104,8 @@ export default function FocusDock({
             {station.kind === "log" && <LogBody />}
             {station.kind === "skills" && <SkillsBody />}
             {station.kind === "links" && <LinksBody />}
+            {station.kind === "blog" && <BlogBody />}
+            {station.kind === "guitar" && <GuitarBody />}
             {station.kind === "soon" && (
               <p className="text-sm leading-relaxed text-sky-300">
                 <AccentText text="Prototype bay for the next *playable* build. When something is ready to try in the browser, it will appear as a *station* on this floor." />
@@ -270,6 +274,44 @@ function SkillsBody() {
             ))}
           </div>
         </div>
+      ))}
+    </div>
+  );
+}
+
+function BlogBody() {
+  return (
+    <div className="w-full space-y-5 text-left">
+      {blogPosts.map((post) => (
+        <article
+          key={post.id}
+          className="border-b border-white/6 pb-4 last:border-0 last:pb-0"
+        >
+          <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-accent/80">
+            {post.date}
+          </p>
+          <h3 className="mb-1.5 font-heading text-sm font-semibold text-text-primary">
+            {post.title}
+          </h3>
+          <p className="text-sm leading-relaxed text-sky-300">
+            <AccentText text={post.body} />
+          </p>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function GuitarBody() {
+  return (
+    <div className="w-full space-y-3">
+      <p className="font-heading text-base font-medium text-text-primary">
+        <AccentText text={guitarContent.headline} />
+      </p>
+      {guitarContent.paragraphs.map((p) => (
+        <p key={p.slice(0, 24)} className="text-sm leading-relaxed text-sky-300">
+          <AccentText text={p} />
+        </p>
       ))}
     </div>
   );

@@ -6,6 +6,8 @@ export type StationKind =
   | "log"
   | "skills"
   | "links"
+  | "blog"
+  | "guitar"
   | "soon";
 
 export interface WorldStationBase {
@@ -121,7 +123,7 @@ export interface PlayableStation extends WorldStationBase {
 }
 
 export interface ContentStation extends WorldStationBase {
-  kind: "about" | "log" | "skills" | "links" | "soon";
+  kind: "about" | "log" | "skills" | "links" | "blog" | "guitar" | "soon";
 }
 
 export type WorldStation = PlayableStation | ContentStation;
@@ -194,12 +196,41 @@ export const worldStations: WorldStation[] = [
     x: 22,
     y: 18,
   },
+  {
+    id: "blog",
+    title: "Blog",
+    shortLabel: "Blog",
+    tagline: "Writing",
+    callout: "Posts beyond the dev log",
+    kind: "blog",
+    x: 18,
+    y: 48,
+  },
+  {
+    id: "guitar",
+    title: "Guitar",
+    shortLabel: "Guitar",
+    tagline: "Playing",
+    callout: "The instrument I keep playing",
+    kind: "guitar",
+    x: 18,
+    y: 80,
+  },
 ];
 
 export function getPlayableStation(id: string): PlayableStation | undefined {
   const station = worldStations.find((s) => s.id === id);
   return station?.kind === "playable" ? station : undefined;
 }
+
+export const guitarContent = {
+  headline: "I love the *guitar*",
+  paragraphs: [
+    "Playing *guitar* is the part of my time that is not a screen. I come back to it for the sound, the repetition, and the feeling of getting a phrase under my hands.",
+    "Making a build and learning a song ask for the same patience. You stay with it until it works, then you try it again a little cleaner.",
+    "This stop is on the floor because that love belongs next to the games and the notes. It is not a project. It is something I do because I love it.",
+  ],
+};
 
 export const aboutContent = {
   headline: "Building toward *games*",
