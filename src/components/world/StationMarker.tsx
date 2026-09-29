@@ -25,6 +25,18 @@ export default function StationMarker({
   const lit = nearby || inspecting;
 
   return (
+    <>
+    <span
+      aria-hidden
+      className="pointer-events-none absolute z-[1] h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl md:h-44 md:w-44"
+      style={{
+        left: `${station.x}%`,
+        top: `${station.y}%`,
+        background: lit
+          ? "radial-gradient(circle, rgba(76,141,255,0.55) 0%, rgba(76,141,255,0.16) 42%, transparent 70%)"
+          : "radial-gradient(circle, rgba(76,141,255,0.34) 0%, rgba(76,141,255,0.1) 42%, transparent 70%)",
+      }}
+    />
     <button
       type="button"
       style={{ left: `${station.x}%`, top: `${station.y}%` }}
@@ -44,7 +56,7 @@ export default function StationMarker({
         {nearby && (
           <motion.span
             aria-hidden
-            className="pointer-events-none absolute bottom-2 left-1/2 h-24 w-24 -translate-x-1/2 rounded-full border border-accent/40"
+            className="pointer-events-none absolute bottom-2 left-1/2 h-24 w-24 -translate-x-1/2 rounded-full border border-[#4C8DFF]/45"
             animate={{ scale: [1, 1.2, 1], opacity: [0.55, 0.15, 0.55] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -52,7 +64,7 @@ export default function StationMarker({
 
         <span
           className={`absolute bottom-0 left-1/2 h-2.5 w-12 -translate-x-1/2 translate-y-1 rounded-full blur-[3px] transition-colors ${
-            lit ? "bg-accent/45" : "bg-black/45"
+            lit ? "bg-[#4C8DFF]/40" : "bg-black/45"
           }`}
           aria-hidden
         />
@@ -60,6 +72,7 @@ export default function StationMarker({
         {playable ? (
           <ElectricBorder
             active={effectsActive}
+            color="#4C8DFF"
             borderRadius={8}
             className={`mb-0 h-[4.25rem] w-[3.35rem] origin-bottom transition-transform duration-300 md:h-[5rem] md:w-16 ${
               lit ? "scale-110" : "scale-100"
@@ -96,6 +109,7 @@ export default function StationMarker({
         </div>
       </motion.div>
     </button>
+    </>
   );
 }
 
@@ -116,7 +130,7 @@ function Cabinet({
             ? "bg-[#101018]"
             : "bg-bg-card/90"
           : lit
-            ? "rounded-t-lg rounded-b-md border border-accent bg-accent/20 shadow-[0_0_28px_rgba(0,229,255,0.4)]"
+            ? "rounded-t-lg rounded-b-md border border-[#4C8DFF] bg-[#4C8DFF]/15 shadow-[0_0_28px_rgba(76,141,255,0.45)]"
             : visited
               ? "rounded-t-lg rounded-b-md border border-white/20 bg-bg-card/75"
               : "rounded-t-lg rounded-b-md border border-border/70 bg-bg-card/55"
@@ -125,13 +139,13 @@ function Cabinet({
       <span
         className={`mb-1.5 h-7 w-10 shrink-0 rounded-sm transition-colors md:h-8 md:w-11 ${
           lit || playable
-            ? "bg-gradient-to-b from-accent/55 to-accent/5"
+            ? "bg-gradient-to-b from-[#4C8DFF]/55 to-[#4C8DFF]/5"
             : "bg-gradient-to-b from-white/12 to-transparent"
         }`}
         aria-hidden
       />
       <span
-        className={`h-1.5 w-full shrink-0 ${lit || playable ? "bg-accent/70" : "bg-white/10"}`}
+        className={`h-1.5 w-full shrink-0 ${lit || playable ? "bg-[#4C8DFF]/70" : "bg-white/10"}`}
         aria-hidden
       />
     </div>

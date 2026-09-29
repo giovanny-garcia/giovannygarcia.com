@@ -87,7 +87,7 @@ export default function FocusDock({
         </button>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
+      <div data-allow-select className="min-h-0 flex-1 select-text overflow-y-auto px-4 py-4">
         <AnimatePresence mode="wait">
           <motion.div
             key={station.id}

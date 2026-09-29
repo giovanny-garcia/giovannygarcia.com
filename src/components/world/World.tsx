@@ -122,52 +122,23 @@ export default function World() {
   );
 
   return (
-    <div className="relative h-dvh w-full overflow-hidden bg-bg-primary text-text-primary">
+    <div
+      className="relative h-dvh w-full select-none overflow-hidden bg-bg-primary text-text-primary [-webkit-touch-callout:none]"
+      onMouseDownCapture={(e) => {
+        const el = e.target as HTMLElement | null;
+        if (el?.closest("button, a, input, textarea, select, [data-allow-select]")) return;
+        e.preventDefault();
+      }}
+    >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,#1a1a2e_0%,#0a0a0f_42%,#050508_100%)]" />
-        <div className="absolute top-[-10%] left-1/2 h-[55vh] w-[70vw] -translate-x-1/2 rounded-full bg-accent/[0.07] opacity-70 blur-[110px]" />
-        <div className="absolute bottom-[5%] left-[10%] h-56 w-56 rounded-full bg-teal-700/15 blur-[90px]" />
-        <div className="absolute right-[8%] bottom-[20%] h-64 w-64 rounded-full bg-cyan-800/12 blur-[100px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,#10131c_0%,#0a0a0f_46%,#050508_100%)]" />
         <div className="absolute inset-x-0 top-0 h-[34%] bg-gradient-to-b from-black/35 to-transparent" />
       </div>
 
-      <header className="pointer-events-none relative z-20 px-5 pt-6 text-center md:pt-8">
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent md:text-xs"
-        >
-          giovannygarcia.com
-        </motion.p>
-        <motion.h1
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.08 }}
-          className="font-heading text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
-        >
-          <span className="bg-gradient-to-r from-accent to-cyan-400 bg-clip-text text-transparent">
-            Giovanny Garcia
-          </span>
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.18 }}
-          className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-sky-300 md:text-base"
-        >
-          Walk the floor. Approach a station to discover{" "}
-          <span className="bg-gradient-to-r from-sky-300 to-accent bg-clip-text font-semibold text-transparent">
-            games
-          </span>
-          , notes, and who I am.
-        </motion.p>
-      </header>
-
       <div className="absolute inset-0 z-10">
-        <div className="absolute inset-x-0 top-[20%] bottom-0 md:top-[18%]">
+        <div className="absolute inset-x-2 top-[9.75rem] bottom-16 md:inset-x-4 md:top-36 md:bottom-16">
           {/* clip, not hidden: hidden still lets focus scroll this frame and shove popups outside it */}
-          <div className="relative mx-auto h-full w-full max-w-6xl overflow-clip">
+          <div className="relative mx-auto h-full w-full max-w-6xl overflow-clip rounded-2xl border border-accent/50 bg-black/25 shadow-[0_0_0_1px_rgba(0,229,255,0.16),0_0_32px_rgba(0,229,255,0.16),inset_0_0_0_1px_rgba(0,0,0,0.55)]">
             <div
               ref={floorRef}
               role="application"
@@ -181,28 +152,16 @@ export default function World() {
               }}
             >
               <div
-                className="pointer-events-none absolute inset-[3%] rounded-[2.5rem] border border-accent/10 bg-gradient-to-b from-[#151522]/45 via-[#101018]/20 to-[#0c0c14]/35 shadow-[inset_0_0_120px_rgba(0,0,0,0.45)]"
+                className="pointer-events-none absolute inset-[3%] rounded-[2.5rem] border border-white/8 bg-[#0c0c12]/35 shadow-[inset_0_0_80px_rgba(0,0,0,0.35)]"
                 aria-hidden
               />
               <div
-                className="pointer-events-none absolute inset-0 opacity-[0.2]"
+                className="pointer-events-none absolute inset-0 opacity-[0.35]"
                 style={{
                   backgroundImage:
-                    "linear-gradient(rgba(0,229,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.1) 1px, transparent 1px)",
+                    "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
                   backgroundSize: "64px 64px",
                 }}
-                aria-hidden
-              />
-              <div
-                className="pointer-events-none absolute top-[16%] left-[18%] h-48 w-48 rounded-full bg-teal-700/20 blur-[90px]"
-                aria-hidden
-              />
-              <div
-                className="pointer-events-none absolute top-[28%] left-[68%] h-56 w-56 rounded-full bg-cyan-800/15 blur-[100px]"
-                aria-hidden
-              />
-              <div
-                className="pointer-events-none absolute top-[62%] left-[40%] h-40 w-40 rounded-full bg-accent/10 blur-[80px]"
                 aria-hidden
               />
 
@@ -232,7 +191,7 @@ export default function World() {
               <Explorer explorerRef={explorerRef} facing={facing} moving={moving} />
 
               <AnimatePresence>
-                {nearby && exploring && (
+                {nearby && exploring && !inspecting && (
                   <motion.div
                     key={`badge-${nearby.id}`}
                     initial={{ opacity: 0, y: 6 }}
@@ -274,6 +233,25 @@ export default function World() {
               )}
             </AnimatePresence>
           </div>
+
+          <header className="pointer-events-none absolute top-0 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2">
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45 }}
+              className="flex items-center gap-2.5 whitespace-nowrap rounded-full border border-accent/35 bg-[#0c1018] px-3.5 py-1.5 shadow-[0_10px_28px_rgba(0,0,0,0.45)]"
+            >
+              <h1 className="font-heading text-sm font-semibold tracking-tight md:text-[15px]">
+                <span className="bg-gradient-to-r from-accent to-cyan-300 bg-clip-text text-transparent">
+                  Giovanny Garcia
+                </span>
+              </h1>
+              <span className="hidden h-3.5 w-px bg-white/15 lg:block" aria-hidden />
+              <p className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted lg:block">
+                games · blog · guitar
+              </p>
+            </motion.div>
+          </header>
         </div>
       </div>
 
@@ -328,7 +306,7 @@ function VisitQuest({ visited }: { visited: Set<string> }) {
   return (
     <aside
       aria-label={done ? "Quest complete" : "Quest: visit every station"}
-      className="pointer-events-none absolute top-[10.75rem] left-3 z-20 w-[12.5rem] rounded-2xl border border-white/10 bg-[#0e0e16]/85 px-3 py-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.4)] backdrop-blur-md md:top-7 md:left-5"
+      className="pointer-events-none absolute top-3.5 left-3 z-20 w-[12.5rem] rounded-2xl border border-white/10 bg-[#0e0e16]/85 px-3 py-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.4)] backdrop-blur-md md:top-4 md:left-5"
     >
       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
         {done ? "Quest complete" : "Quest"}

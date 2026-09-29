@@ -29,6 +29,11 @@ const MOVE_KEYS = [
   "arrowright",
 ];
 
+function clearTextSelection() {
+  const sel = window.getSelection();
+  if (sel && !sel.isCollapsed) sel.removeAllRanges();
+}
+
 function clamp(v: number, min: number, max: number) {
   return Math.min(max, Math.max(min, v));
 }
@@ -106,6 +111,7 @@ export function useFloorExplorer(enabled: boolean) {
     };
     targetRef.current = next;
     setMoveTarget(next);
+    clearTextSelection();
     kickRef.current();
   }, []);
 
@@ -130,6 +136,7 @@ export function useFloorExplorer(enabled: boolean) {
       padRef.current = { x, y };
       if (x !== 0 || y !== 0) {
         clearMoveTarget();
+        clearTextSelection();
         kickRef.current();
       }
     },
@@ -153,6 +160,7 @@ export function useFloorExplorer(enabled: boolean) {
         e.preventDefault();
         keysRef.current.add(key);
         clearMoveTarget();
+        clearTextSelection();
         kickRef.current();
       }
     };
