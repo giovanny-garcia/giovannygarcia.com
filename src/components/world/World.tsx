@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { HiChevronRight } from "react-icons/hi";
 import {
   dockPlacement,
   getPlayableStation,
@@ -38,10 +39,12 @@ export default function World() {
   const floorRef = useRef<HTMLDivElement>(null);
   const explorerRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
+  const waypointRef = useRef<HTMLButtonElement>(null);
   const dockStationRef = useRef<{
     x: number;
     y: number;
   } | null>(null);
+  const waypointTargetRef = useRef<{ x: number; y: number } | null>(null);
 
   // Reset dismiss when you leave or reach a different station (React "adjust state during render")
   if (nearbyId !== trackedNearby) {
@@ -60,6 +63,10 @@ export default function World() {
     () => worldStations.find((s) => s.id === nearbyId) ?? null,
     [nearbyId],
   );
+  const nextStation = useMemo(
+    () => worldStations.find((station) => !visited.has(station.id)) ?? null,
+    [visited],
+  );
   const activeGame = activeGameId ? getPlayableStation(activeGameId) : undefined;
   const dockPlace = inspecting
     ? dockPlacement(viewportPoint(inspecting, mapCamera(posRef.current)))
@@ -71,6 +78,10 @@ export default function World() {
         y: inspecting.y,
       }
     : null;
+  waypointTargetRef.current =
+    exploring && nextStation && !inspecting
+      ? { x: nextStation.x, y: nextStation.y }
+      : null;
 
   const paintFloor = useCallback(
     (pos: { x: number; y: number }, isMoving: boolean) => {
@@ -79,6 +90,8 @@ export default function World() {
         explorer: explorerRef.current,
         dock: dockRef.current,
         dockStation: dockStationRef.current,
+        waypoint: waypointRef.current,
+        waypointTarget: waypointTargetRef.current,
       });
     },
     [],
@@ -88,7 +101,7 @@ export default function World() {
 
   useLayoutEffect(() => {
     paintFloor(posRef.current, moving);
-  }, [paintFloor, posRef, moving, inspecting]);
+  }, [paintFloor, posRef, moving, inspecting, nextStation]);
 
   useEffect(() => {
     if (!exploring) return;
@@ -219,6 +232,29 @@ export default function World() {
               }}
               aria-hidden
             />
+
+            {exploring && nextStation && (
+              <button
+                ref={waypointRef}
+                type="button"
+                aria-label={`Head toward ${nextStation.title}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  walkToStation(nextStation.id);
+                  setHintPulse(false);
+                }}
+                className="invisible absolute z-20 flex items-center gap-1.5 rounded-full border border-accent/50 bg-[#0c1018]/95 py-1 pr-2.5 pl-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-accent shadow-[0_8px_24px_rgba(0,0,0,0.5)]"
+              >
+                <span
+                  data-waypoint-arrow
+                  className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/15"
+                  aria-hidden
+                >
+                  <HiChevronRight size={14} />
+                </span>
+                {nextStation.shortLabel}
+              </button>
+            )}
 
             <AnimatePresence>
               {inspecting && dockPlace && exploring && (

@@ -41,6 +41,57 @@ export function mapCamera(player: { x: number; y: number }) {
   };
 }
 
+/** Floor-viewport inset (percent) the off-screen waypoint is allowed to occupy. */
+const WAYPOINT_INSET = { minX: 14, maxX: 86, minY: 16, maxY: 78 } as const;
+
+export interface WaypointPlacement {
+  x: number;
+  y: number;
+  /** Degrees clockwise from screen-right, matching CSS rotate. */
+  angle: number;
+  visible: boolean;
+}
+
+/** Pin a marker to the floor edge when the next station is outside the view. */
+export function edgeWaypoint(
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+): WaypointPlacement {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+  const inside =
+    to.x >= WAYPOINT_INSET.minX &&
+    to.x <= WAYPOINT_INSET.maxX &&
+    to.y >= WAYPOINT_INSET.minY &&
+    to.y <= WAYPOINT_INSET.maxY;
+  if (inside || (dx === 0 && dy === 0)) {
+    return { x: to.x, y: to.y, angle, visible: false };
+  }
+
+  let t = Infinity;
+  if (dx !== 0) {
+    const edge = dx > 0 ? WAYPOINT_INSET.maxX : WAYPOINT_INSET.minX;
+    const hit = (edge - from.x) / dx;
+    if (hit > 0) t = Math.min(t, hit);
+  }
+  if (dy !== 0) {
+    const edge = dy > 0 ? WAYPOINT_INSET.maxY : WAYPOINT_INSET.minY;
+    const hit = (edge - from.y) / dy;
+    if (hit > 0) t = Math.min(t, hit);
+  }
+  if (!Number.isFinite(t)) {
+    return { x: from.x, y: from.y, angle, visible: false };
+  }
+
+  return {
+    x: Math.min(WAYPOINT_INSET.maxX, Math.max(WAYPOINT_INSET.minX, from.x + dx * t)),
+    y: Math.min(WAYPOINT_INSET.maxY, Math.max(WAYPOINT_INSET.minY, from.y + dy * t)),
+    angle,
+    visible: true,
+  };
+}
+
 /** World point converted into percentages of the floor viewport. */
 export function viewportPoint(
   worldPoint: { x: number; y: number },
@@ -87,7 +138,36 @@ export function applyDockPlacement(
   el.style.maxHeight = place.maxHeight;
 }
 
-/** Camera, explorer, and open dock. Called from the walk loop so React does not re-render per frame. */
+function paintWaypoint(
+  pos: { x: number; y: number },
+  camera: { x: number; y: number },
+  el: HTMLButtonElement | null,
+  target: { x: number; y: number } | null,
+) {
+  if (!el) return;
+  if (!target) {
+    el.style.visibility = "hidden";
+    el.tabIndex = -1;
+    return;
+  }
+  const place = edgeWaypoint(
+    viewportPoint(pos, camera),
+    viewportPoint(target, camera),
+  );
+  el.style.visibility = place.visible ? "visible" : "hidden";
+  el.tabIndex = place.visible ? 0 : -1;
+  if (!place.visible) return;
+  el.style.left = `${place.x}%`;
+  el.style.top = `${place.y}%`;
+  // Grow the label inward so a long name does not clip on the frame edge.
+  const shift = (value: number, min: number, max: number) =>
+    value <= min + 0.6 ? "0%" : value >= max - 0.6 ? "-100%" : "-50%";
+  el.style.transform = `translate(${shift(place.x, WAYPOINT_INSET.minX, WAYPOINT_INSET.maxX)}, ${shift(place.y, WAYPOINT_INSET.minY, WAYPOINT_INSET.maxY)})`;
+  const arrow = el.querySelector<HTMLElement>("[data-waypoint-arrow]");
+  if (arrow) arrow.style.transform = `rotate(${place.angle}deg)`;
+}
+
+/** Camera, explorer, dock, and off-screen waypoint. Called from the walk loop so React does not re-render per frame. */
 export function paintFloorFrame(
   pos: { x: number; y: number },
   moving: boolean,
@@ -96,6 +176,8 @@ export function paintFloorFrame(
     explorer: HTMLDivElement | null;
     dock: HTMLDivElement | null;
     dockStation: { x: number; y: number } | null;
+    waypoint: HTMLButtonElement | null;
+    waypointTarget: { x: number; y: number } | null;
   },
 ) {
   const camera = mapCamera(pos);
@@ -110,6 +192,7 @@ export function paintFloorFrame(
   if (els.dock && els.dockStation) {
     applyDockPlacement(els.dock, viewportPoint(els.dockStation, camera));
   }
+  paintWaypoint(pos, camera, els.waypoint, els.waypointTarget);
 }
 
 export interface PlayableStation extends WorldStationBase {
