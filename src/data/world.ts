@@ -111,13 +111,15 @@ export interface DockPlacement {
   maxHeight: string;
 }
 
-/** Keep the dock beside a station and inside the floor viewport. */
+/** Keep the dock beside a station and inside the floor viewport.
+ *  Anchored to the station only — no mouse chasing / avoidance. */
 export function dockPlacement(anchor: { x: number; y: number }): DockPlacement {
   const left = Math.min(82, Math.max(18, anchor.x));
   const placeBelow = anchor.y < 46;
+  // Prefer fitting content; still leave walk space around the explorer.
   const maxHeight = placeBelow
-    ? `min(28rem, 48vh, calc(${100 - anchor.y}% - 3.5rem))`
-    : `min(28rem, 48vh, calc(${anchor.y}% - 8rem))`;
+    ? `min(34rem, 58vh, calc(${100 - anchor.y}% - 3.5rem))`
+    : `min(34rem, 58vh, calc(${anchor.y}% - 8rem))`;
   return {
     placeBelow,
     left: `${left}%`,
@@ -200,7 +202,6 @@ export interface PlayableStation extends WorldStationBase {
   description: string;
   tags: string[];
   liveUrl: string;
-  embedUrl: string;
   engine: string;
   image?: string;
 }
@@ -217,7 +218,7 @@ export const worldStations: WorldStation[] = [
     title: "About",
     shortLabel: "About",
     tagline: "Who I am",
-    callout: "CS student, games first",
+    callout: "Who I am, in a few lines",
     kind: "about",
     x: 50,
     y: 50,
@@ -227,13 +228,12 @@ export const worldStations: WorldStation[] = [
     title: "Tiles Ascend",
     shortLabel: "Tiles Ascend",
     tagline: "Playable build",
-    callout: "Godot 4.3 · play it here",
+    callout: "Godot 4.3 · itch.io",
     kind: "playable",
     description:
-      "A *Godot 4.3* game written in *GDScript* and exported for the browser. The build is hosted on *this site* so it starts faster — play here, then step back onto the floor. Also on itch.io.",
-    tags: ["Godot 4.3", "GDScript", "Web", "Self-hosted"],
+      "Small game I built in Godot 4.3 with GDScript. The browser build is on *itch.io*. That's the version I keep updated.",
+    tags: ["Godot 4.3", "GDScript", "Web", "itch.io"],
     liveUrl: "https://cry0smith.itch.io/tiles-ascend",
-    embedUrl: "/tiles-ascend/index.html",
     engine: "Godot 4.3",
     image: tilesAscendImg,
     x: 46,
@@ -244,7 +244,7 @@ export const worldStations: WorldStation[] = [
     title: "Dev Log",
     shortLabel: "Dev Log",
     tagline: "Notes & process",
-    callout: "How this floor got built",
+    callout: "What I shipped and why",
     kind: "log",
     x: 52,
     y: 22,
@@ -274,7 +274,7 @@ export const worldStations: WorldStation[] = [
     title: "Workbench",
     shortLabel: "Workbench",
     tagline: "Coming soon",
-    callout: "Next build, not playable yet",
+    callout: "Next game, not ready yet",
     kind: "soon",
     x: 22,
     y: 18,
@@ -284,7 +284,7 @@ export const worldStations: WorldStation[] = [
     title: "Blog",
     shortLabel: "Blog",
     tagline: "Writing",
-    callout: "Posts beyond the dev log",
+    callout: "Not just build updates",
     kind: "blog",
     x: 18,
     y: 48,
@@ -294,33 +294,28 @@ export const worldStations: WorldStation[] = [
     title: "Guitar",
     shortLabel: "Guitar",
     tagline: "Playing",
-    callout: "The instrument I keep playing",
+    callout: "Still my main hobby",
     kind: "guitar",
     x: 18,
     y: 80,
   },
 ];
 
-export function getPlayableStation(id: string): PlayableStation | undefined {
-  const station = worldStations.find((s) => s.id === id);
-  return station?.kind === "playable" ? station : undefined;
-}
-
 export const guitarContent = {
-  headline: "I love the *guitar*",
+  headline: "Still playing *guitar*",
   paragraphs: [
-    "Playing *guitar* is the part of my time that is not a screen. I come back to it for the sound, the repetition, and the feeling of getting a phrase under my hands.",
-    "Making a build and learning a song ask for the same patience. You stay with it until it works, then you try it again a little cleaner.",
-    "This stop is on the floor because that love belongs next to the games and the notes. It is not a project. It is something I do because I love it.",
+    "I took classical lessons as a kid. There were pieces I heard and wanted to learn how to play.",
+    "These days it's a lot of jamming with friends. I've also helped on a few tracks for indie games when someone needed a part.",
+    "Music shows up in my game work sometimes, so it felt right to put guitar on the site too. I still play for fun.",
   ],
 };
 
 export const aboutContent = {
-  headline: "Building toward *games*",
+  headline: "Making *games*, learning code",
   paragraphs: [
-    "I'm *Giovanny Garcia* — a computer science student looking for my first *software development* role, with *games* as the software I most want to make.",
-    "I ship playable work when I can. *Tiles Ascend* is a *Godot 4.3* web build you can try from this floor. Freelance and studio-bound projects will land here as stations as they go live.",
-    "This site is the place: *walk the floor*, *play a build*, *read a note*, leave through a link. One space instead of a stack of resume sections.",
+    "I'm Giovanny Garcia. Computer science student, looking for my first software job. Games are what pulled me into programming and what I still want to work on.",
+    "*Tiles Ascend* is on itch.io if you want something playable today (Godot 4.3, web export). When other work is public, I'll add it here too.",
+    "I made this site as a map you can walk around because scrolling through another resume layout bored me. Hope it's a little more interesting for you too.",
   ],
 };
 

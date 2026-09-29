@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { HiExternalLink, HiPlay, HiX } from "react-icons/hi";
+import { HiPlay } from "react-icons/hi";
 import {
   FaGithub,
   FaLinkedin,
@@ -21,7 +21,7 @@ import { logEntries } from "../../data/log";
 import { skillCategories } from "../../data/skills";
 import ElectricBorder from "./ElectricBorder";
 
-/** Phrases wrapped in *asterisks* render in the sky-to-cyan gradient, semibold. */
+/** Phrases wrapped in *asterisks* render in accent, for a few key words only. */
 function AccentText({ text }: { text: string }) {
   const parts = text.split(/(\*[^*]+\*)/g);
   return parts.map((part, i) => {
@@ -29,7 +29,7 @@ function AccentText({ text }: { text: string }) {
       return (
         <span
           key={i}
-          className="bg-gradient-to-r from-sky-300 to-accent bg-clip-text font-semibold text-transparent"
+          className="text-accent font-semibold"
         >
           {part.slice(1, -1)}
         </span>
@@ -48,46 +48,41 @@ const SOCIAL_ICONS = {
   Twitch: FaTwitch,
 } as const;
 
+const STATION_TAG_CLASS =
+  "cursor-default select-none rounded-md border border-transparent bg-white/5 px-2 py-1 font-mono text-[10px] text-text-muted transition-[color,background-color,border-color,transform] duration-200 hover:-translate-y-px hover:border-accent/30 hover:bg-accent/10 hover:text-accent";
+
+function StationTag({ label }: { label: string }) {
+  return <span className={STATION_TAG_CLASS}>{label}</span>;
+}
+
 interface FocusDockProps {
   station: WorldStation;
   placement: DockPlacement;
   dockRef: RefObject<HTMLDivElement | null>;
-  onClose: () => void;
-  onPlay: (id: string) => void;
 }
 
 export default function FocusDock({
   station,
   placement,
   dockRef,
-  onClose,
-  onPlay,
 }: FocusDockProps) {
   const playable = station.kind === "playable";
   const { placeBelow, maxHeight } = placement;
 
   const panel = (
     <>
-      <div className="relative flex shrink-0 items-center justify-center border-b border-white/8 px-4 py-3">
-        <div className="min-w-0 px-8 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
-            {station.tagline}
-          </p>
-          <h2 className="font-heading text-xl font-semibold tracking-tight text-text-primary">
+      <div className="flex shrink-0 items-center gap-2 border-b border-white/8 px-3 py-1.5">
+        <div className="min-w-0 flex-1">
+          <h2 className="truncate font-heading text-sm font-semibold tracking-tight text-text-primary">
             {station.title}
           </h2>
+          <p className="truncate font-mono text-[9px] uppercase tracking-[0.16em] text-accent/90">
+            {station.tagline}
+          </p>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-          className="absolute top-1/2 right-3 -translate-y-1/2 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-white/5 hover:text-text-primary"
-        >
-          <HiX size={18} />
-        </button>
       </div>
 
-      <div data-allow-select className="min-h-0 flex-1 select-text overflow-y-auto px-4 py-4">
+      <div className="panel-scroll min-h-0 flex-1 overflow-y-auto px-4 py-3">
         <AnimatePresence mode="wait">
           <motion.div
             key={station.id}
@@ -97,9 +92,7 @@ export default function FocusDock({
             transition={{ duration: 0.2 }}
             className="flex flex-col items-center text-center"
           >
-            {station.kind === "playable" && (
-              <PlayableBody station={station} onPlay={onPlay} />
-            )}
+            {station.kind === "playable" && <PlayableBody station={station} />}
             {station.kind === "about" && <AboutBody />}
             {station.kind === "log" && <LogBody />}
             {station.kind === "skills" && <SkillsBody />}
@@ -107,8 +100,8 @@ export default function FocusDock({
             {station.kind === "blog" && <BlogBody />}
             {station.kind === "guitar" && <GuitarBody />}
             {station.kind === "soon" && (
-              <p className="text-sm leading-relaxed text-sky-300">
-                <AccentText text="Prototype bay for the next *playable* build. When something is ready to try in the browser, it will appear as a *station* on this floor." />
+              <p className="text-sm leading-relaxed text-text-secondary">
+                <AccentText text="Nothing *playable* here yet. The next browser build gets this spot when it's actually ready to try." />
               </p>
             )}
           </motion.div>
@@ -122,7 +115,7 @@ export default function FocusDock({
       ref={dockRef}
       onClick={(e) => e.stopPropagation()}
       onPointerDown={(e) => e.stopPropagation()}
-      className="absolute z-30 flex w-[min(92%,20.5rem)] -translate-x-1/2 flex-col md:w-[22rem]"
+      className="absolute z-30 flex w-[min(92%,20.5rem)] -translate-x-1/2 flex-col select-none md:w-[22rem]"
       style={{
         left: placement.left,
         top: placement.top,
@@ -164,10 +157,8 @@ export default function FocusDock({
 
 function PlayableBody({
   station,
-  onPlay,
 }: {
   station: Extract<WorldStation, { kind: "playable" }>;
-  onPlay: (id: string) => void;
 }) {
   return (
     <div className="flex w-full flex-col items-center">
@@ -178,38 +169,23 @@ function PlayableBody({
           className="mb-3 aspect-video w-full rounded-lg object-cover"
         />
       ) : null}
-      <p className="mb-4 text-sm leading-relaxed text-sky-300">
+      <p className="mb-4 text-sm leading-relaxed text-text-secondary">
         <AccentText text={station.description} />
       </p>
       <div className="mb-4 flex flex-wrap justify-center gap-1.5">
         {station.tags.map((tag) => (
-          <span
-            key={tag}
-            className="cursor-default select-none rounded-md border border-transparent bg-white/5 px-2 py-1 font-mono text-[10px] text-text-muted transition-[color,background-color,border-color,transform] duration-200 hover:-translate-y-px hover:border-accent/30 hover:bg-accent/10 hover:text-accent"
-          >
-            {tag}
-          </span>
+          <StationTag key={tag} label={tag} />
         ))}
       </div>
-      <div className="flex w-full justify-center gap-2">
-        <button
-          type="button"
-          onClick={() => onPlay(station.id)}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 font-heading text-sm font-semibold text-bg-primary transition-all hover:bg-accent-dim hover:shadow-lg hover:shadow-accent/25"
-        >
-          <HiPlay size={16} />
-          Play
-        </button>
-        <a
-          href={station.liveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center rounded-xl border border-white/10 px-3 py-2.5 text-text-secondary transition-colors hover:border-accent/40 hover:text-accent"
-          aria-label="Open on itch.io"
-        >
-          <HiExternalLink size={16} />
-        </a>
-      </div>
+      <a
+        href={station.liveUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent px-4 py-2.5 font-heading text-sm font-semibold text-bg-primary transition-all hover:bg-accent-dim hover:shadow-lg hover:shadow-accent/25"
+      >
+        <HiPlay size={16} />
+        Play on itch.io
+      </a>
     </div>
   );
 }
@@ -223,7 +199,7 @@ function AboutBody() {
       {aboutContent.paragraphs.map((p) => (
         <p
           key={p.slice(0, 24)}
-          className="text-sm leading-relaxed text-sky-300"
+          className="text-sm leading-relaxed text-text-secondary"
         >
           <AccentText text={p} />
         </p>
@@ -246,7 +222,7 @@ function LogBody() {
           <h3 className="mb-1.5 font-heading text-sm font-semibold text-text-primary">
             {entry.title}
           </h3>
-          <p className="text-sm leading-relaxed text-sky-300">
+          <p className="text-sm leading-relaxed text-text-secondary">
             <AccentText text={entry.body} />
           </p>
         </article>
@@ -265,12 +241,7 @@ function SkillsBody() {
           </p>
           <div className="flex flex-wrap justify-center gap-1.5 sm:justify-start">
             {cat.skills.map((skill) => (
-              <span
-                key={skill}
-                className="rounded-md border border-white/8 bg-white/[0.03] px-2 py-1 text-xs text-text-secondary"
-              >
-                {skill}
-              </span>
+              <StationTag key={skill} label={skill} />
             ))}
           </div>
         </div>
@@ -293,7 +264,7 @@ function BlogBody() {
           <h3 className="mb-1.5 font-heading text-sm font-semibold text-text-primary">
             {post.title}
           </h3>
-          <p className="text-sm leading-relaxed text-sky-300">
+          <p className="text-sm leading-relaxed text-text-secondary">
             <AccentText text={post.body} />
           </p>
         </article>
@@ -309,7 +280,7 @@ function GuitarBody() {
         <AccentText text={guitarContent.headline} />
       </p>
       {guitarContent.paragraphs.map((p) => (
-        <p key={p.slice(0, 24)} className="text-sm leading-relaxed text-sky-300">
+        <p key={p.slice(0, 24)} className="text-sm leading-relaxed text-text-secondary">
           <AccentText text={p} />
         </p>
       ))}
@@ -320,10 +291,10 @@ function GuitarBody() {
 function LinksBody() {
   return (
     <div className="w-full space-y-3">
-      <p className="mb-1 text-sm leading-relaxed text-sky-300">
-        <AccentText text="Looking for a first *software development internship*. Best ways to reach me:" />
+      <p className="mb-1 text-sm leading-relaxed text-text-secondary">
+        <AccentText text="Open to a first *software internship*. Easiest ways to reach me:" />
       </p>
-      <ul className="space-y-2">
+      <ul className="grid grid-cols-2 gap-2">
         {socialLinks.map(({ label, href }) => {
           const Icon = SOCIAL_ICONS[label];
           return (
@@ -332,9 +303,9 @@ function LinksBody() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2.5 text-sm text-text-secondary transition-colors hover:border-accent/35 hover:bg-accent/5 hover:text-accent"
+                className="flex h-full items-center justify-center gap-2 rounded-xl border border-white/8 bg-white/[0.03] px-2.5 py-2 text-sm text-text-secondary transition-colors hover:border-accent/35 hover:bg-accent/5 hover:text-accent"
               >
-                <Icon size={18} />
+                <Icon size={16} />
                 {label}
               </a>
             </li>

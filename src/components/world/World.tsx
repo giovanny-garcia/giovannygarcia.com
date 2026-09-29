@@ -3,23 +3,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import { HiChevronRight } from "react-icons/hi";
 import {
   dockPlacement,
-  getPlayableStation,
   mapCamera,
   paintFloorFrame,
   viewportPoint,
   WORLD_SIZE,
   worldStations,
 } from "../../data/world";
-import { useWorldMode } from "../../context/useWorldMode";
 import { useFloorExplorer } from "../../hooks/useFloorExplorer";
 import StationMarker from "./StationMarker";
 import FocusDock from "./FocusDock";
-import GamePlayer from "./GamePlayer";
 import Explorer from "./Explorer";
+import NoticeHud from "./NoticeHud";
+import WorldProps from "./WorldProps";
 
 export default function World() {
-  const { view, activeGameId, playGame, exitGame } = useWorldMode();
-  const exploring = view === "explore";
   const {
     posRef,
     onFrameRef,
@@ -31,11 +28,9 @@ export default function World() {
     walkToStation,
     moveTarget,
     setPad,
-  } = useFloorExplorer(exploring);
+  } = useFloorExplorer(true);
 
-  const [dismissedId, setDismissedId] = useState<string | null>(null);
-  const [hintPulse, setHintPulse] = useState(true);
-  const [trackedNearby, setTrackedNearby] = useState<string | null>(nearbyId);
+  const [hasMoved, setHasMoved] = useState(false);
   const floorRef = useRef<HTMLDivElement>(null);
   const explorerRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
@@ -46,18 +41,9 @@ export default function World() {
   } | null>(null);
   const waypointTargetRef = useRef<{ x: number; y: number } | null>(null);
 
-  // Reset dismiss when you leave or reach a different station (React "adjust state during render")
-  if (nearbyId !== trackedNearby) {
-    setTrackedNearby(nearbyId);
-    setDismissedId(null);
-  }
-
-  const inspectId =
-    nearbyId && nearbyId !== dismissedId ? nearbyId : null;
-
   const inspecting = useMemo(
-    () => worldStations.find((s) => s.id === inspectId) ?? null,
-    [inspectId],
+    () => worldStations.find((s) => s.id === nearbyId) ?? null,
+    [nearbyId],
   );
   const nearby = useMemo(
     () => worldStations.find((s) => s.id === nearbyId) ?? null,
@@ -67,7 +53,6 @@ export default function World() {
     () => worldStations.find((station) => !visited.has(station.id)) ?? null,
     [visited],
   );
-  const activeGame = activeGameId ? getPlayableStation(activeGameId) : undefined;
   const dockPlace = inspecting
     ? dockPlacement(viewportPoint(inspecting, mapCamera(posRef.current)))
     : null;
@@ -79,7 +64,7 @@ export default function World() {
       }
     : null;
   waypointTargetRef.current =
-    exploring && nextStation && !inspecting
+    nextStation && !inspecting
       ? { x: nextStation.x, y: nextStation.y }
       : null;
 
@@ -104,22 +89,8 @@ export default function World() {
   }, [paintFloor, posRef, moving, inspecting, nextStation]);
 
   useEffect(() => {
-    if (!exploring) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() !== "e") return;
-      const tag = (e.target as HTMLElement | null)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
-      if (!nearbyId) return;
-      e.preventDefault();
-      setDismissedId(null);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [exploring, nearbyId]);
-
-  const closeDock = useCallback(() => {
-    if (nearbyId) setDismissedId(nearbyId);
-  }, [nearbyId]);
+    if (moving) setHasMoved(true);
+  }, [moving]);
 
   const onFloorPointer = useCallback(
     (clientX: number, clientY: number) => {
@@ -129,7 +100,6 @@ export default function World() {
       const x = ((clientX - rect.left) / rect.width) * 100;
       const y = ((clientY - rect.top) / rect.height) * 100;
       walkTo({ x, y });
-      setHintPulse(false);
     },
     [walkTo],
   );
@@ -139,7 +109,7 @@ export default function World() {
       className="relative h-dvh w-full select-none overflow-hidden bg-bg-primary text-text-primary [-webkit-touch-callout:none]"
       onMouseDownCapture={(e) => {
         const el = e.target as HTMLElement | null;
-        if (el?.closest("button, a, input, textarea, select, [data-allow-select]")) return;
+        if (el?.closest("button, a, input, textarea, select")) return;
         e.preventDefault();
       }}
     >
@@ -151,32 +121,42 @@ export default function World() {
       <div className="absolute inset-0 z-10">
         <div className="absolute inset-x-2 top-[9.75rem] bottom-16 md:inset-x-4 md:top-36 md:bottom-16">
           {/* clip, not hidden: hidden still lets focus scroll this frame and shove popups outside it */}
-          <div className="relative mx-auto h-full w-full max-w-6xl overflow-clip rounded-2xl border border-accent/50 bg-black/25 shadow-[0_0_0_1px_rgba(0,229,255,0.16),0_0_32px_rgba(0,229,255,0.16),inset_0_0_0_1px_rgba(0,0,0,0.55)]">
+            <div className="relative mx-auto h-full w-full max-w-6xl overflow-clip rounded-2xl border border-accent/50 bg-black/25 shadow-[0_0_0_1px_rgba(0,229,255,0.16),0_0_32px_rgba(0,229,255,0.16),inset_0_0_0_1px_rgba(0,0,0,0.55)]">
             <div
               ref={floorRef}
               role="application"
               aria-label="Interactive floor. Use WASD or arrow keys to move, or click to walk. Approach stations to inspect. The floor extends beyond the window and scrolls as you move."
               tabIndex={0}
               onClick={(e) => onFloorPointer(e.clientX, e.clientY)}
-              className="absolute top-0 left-0 cursor-crosshair touch-none outline-none"
+              className="absolute top-0 left-0 cursor-crosshair touch-none bg-[#07070c] outline-none"
               style={{
                 width: `${WORLD_SIZE.width}%`,
                 height: `${WORLD_SIZE.height}%`,
               }}
             >
               <div
-                className="pointer-events-none absolute inset-[3%] rounded-[2.5rem] border border-white/8 bg-[#0c0c12]/35 shadow-[inset_0_0_80px_rgba(0,0,0,0.35)]"
+                className="pointer-events-none absolute inset-[3%] rounded-[2.5rem] border border-white/8 bg-[#0c0c12]/55 shadow-[inset_0_0_80px_rgba(0,0,0,0.55)]"
                 aria-hidden
               />
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.35]"
                 style={{
                   backgroundImage:
-                    "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
+                    "linear-gradient(rgba(0,229,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.06) 1px, transparent 1px)",
                   backgroundSize: "64px 64px",
                 }}
                 aria-hidden
               />
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at 50% 55%, transparent 42%, rgba(5,5,8,0.55) 100%)",
+                }}
+                aria-hidden
+              />
+
+              <WorldProps />
 
               {worldStations.map((station, index) => (
                 <StationMarker
@@ -185,8 +165,7 @@ export default function World() {
                   index={index}
                   nearby={nearbyId === station.id}
                   visited={visited.has(station.id)}
-                  inspecting={inspectId === station.id}
-                  effectsActive={exploring}
+                  inspecting={inspecting?.id === station.id}
                   onApproach={walkToStation}
                 />
               ))}
@@ -201,10 +180,15 @@ export default function World() {
                 )}
               </AnimatePresence>
 
-              <Explorer explorerRef={explorerRef} facing={facing} moving={moving} />
+              <Explorer
+                explorerRef={explorerRef}
+                facing={facing}
+                moving={moving}
+                nudge={!hasMoved}
+              />
 
               <AnimatePresence>
-                {nearby && exploring && !inspecting && (
+                {nearby && !inspecting && (
                   <motion.div
                     key={`badge-${nearby.id}`}
                     initial={{ opacity: 0, y: 6 }}
@@ -224,16 +208,7 @@ export default function World() {
               </AnimatePresence>
             </div>
 
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse at 50% 55%, transparent 42%, rgba(5,5,8,0.45) 100%)",
-              }}
-              aria-hidden
-            />
-
-            {exploring && nextStation && (
+            {nextStation && (
               <button
                 ref={waypointRef}
                 type="button"
@@ -241,7 +216,6 @@ export default function World() {
                 onClick={(e) => {
                   e.stopPropagation();
                   walkToStation(nextStation.id);
-                  setHintPulse(false);
                 }}
                 className="invisible absolute z-20 flex items-center gap-1.5 rounded-full border border-accent/50 bg-[#0c1018]/95 py-1 pr-2.5 pl-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-accent shadow-[0_8px_24px_rgba(0,0,0,0.5)]"
               >
@@ -257,14 +231,12 @@ export default function World() {
             )}
 
             <AnimatePresence>
-              {inspecting && dockPlace && exploring && (
+              {inspecting && dockPlace && (
                 <FocusDock
                   key="focus-dock"
                   station={inspecting}
                   placement={dockPlace}
                   dockRef={dockRef}
-                  onClose={closeDock}
-                  onPlay={playGame}
                 />
               )}
             </AnimatePresence>
@@ -291,44 +263,20 @@ export default function World() {
         </div>
       </div>
 
-      {exploring && <VisitQuest visited={visited} />}
+      <VisitQuest visited={visited} />
+      <NoticeHud />
 
-      {hintPulse && !inspecting && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9 }}
-          className="pointer-events-none absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-1 px-4 text-center md:bottom-7"
-        >
-          <p className="font-mono text-[11px] tracking-wide text-text-muted">
-            <span className="text-accent">WASD</span> / arrows move ·{" "}
-            <span className="text-accent">click</span> to walk · floor scrolls
-            with you
-          </p>
-          <p className="font-mono text-[10px] text-text-muted/70">
-            Get close to open · Esc leaves a game
-          </p>
-        </motion.div>
-      )}
-
-      {exploring && (
-        <div className="absolute bottom-4 left-4 z-30 md:hidden">
-          <div className="grid grid-cols-3 gap-1">
-            <span />
-            <PadButton label="↑" onVector={setPad} vec={{ x: 0, y: -1 }} />
-            <span />
-            <PadButton label="←" onVector={setPad} vec={{ x: -1, y: 0 }} />
-            <PadButton label="↓" onVector={setPad} vec={{ x: 0, y: 1 }} />
-            <PadButton label="→" onVector={setPad} vec={{ x: 1, y: 0 }} />
-          </div>
+      <div className="absolute bottom-4 left-4 z-30 md:hidden">
+        <div className={`grid grid-cols-3 gap-1 ${hasMoved ? "" : "nudge-pad"}`}>
+          <span />
+          <PadButton label="↑" onVector={setPad} vec={{ x: 0, y: -1 }} />
+          <span />
+          <PadButton label="←" onVector={setPad} vec={{ x: -1, y: 0 }} />
+          <PadButton label="↓" onVector={setPad} vec={{ x: 0, y: 1 }} />
+          <PadButton label="→" onVector={setPad} vec={{ x: 1, y: 0 }} />
         </div>
-      )}
+      </div>
 
-      <AnimatePresence>
-        {view === "playing" && activeGame && (
-          <GamePlayer game={activeGame} onExit={exitGame} />
-        )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -350,8 +298,8 @@ function VisitQuest({ visited }: { visited: Set<string> }) {
       <p className="mt-1 font-heading text-sm font-semibold text-text-primary">
         {done ? "Every station visited" : "Visit every station"}
       </p>
-      <p className="mt-0.5 text-xs text-sky-300">
-        {done ? "The floor is cleared." : `Next: ${next?.shortLabel}`}
+      <p className="mt-0.5 text-xs text-text-secondary">
+        {done ? "You've hit every stop." : `Next: ${next?.shortLabel}`}
       </p>
       <div
         className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/15"

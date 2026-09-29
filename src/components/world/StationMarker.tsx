@@ -1,6 +1,29 @@
 import { motion } from "framer-motion";
+import type { CSSProperties } from "react";
+import type { IconType } from "react-icons";
+import {
+  HiBookOpen,
+  HiChip,
+  HiClipboardList,
+  HiClock,
+  HiLink,
+  HiPlay,
+  HiUserCircle,
+} from "react-icons/hi";
+import { FaGuitar } from "react-icons/fa6";
 import type { WorldStation } from "../../data/world";
 import ElectricBorder from "./ElectricBorder";
+
+const STATION_ICONS: Record<WorldStation["kind"], IconType> = {
+  about: HiUserCircle,
+  playable: HiPlay,
+  log: HiClipboardList,
+  skills: HiChip,
+  links: HiLink,
+  blog: HiBookOpen,
+  guitar: FaGuitar,
+  soon: HiClock,
+};
 
 interface StationMarkerProps {
   station: WorldStation;
@@ -8,9 +31,20 @@ interface StationMarkerProps {
   nearby: boolean;
   visited: boolean;
   inspecting: boolean;
-  effectsActive: boolean;
   onApproach: (id: string) => void;
 }
+
+/** Concentric rings: radius in px, glyph count, characters to sprinkle (no warping). */
+const WAVE_RINGS = [
+  { radius: 36, count: 12, glyphs: "+*+" },
+  { radius: 56, count: 16, glyphs: ":+·" },
+  { radius: 78, count: 20, glyphs: "·:." },
+  { radius: 102, count: 26, glyphs: "·." },
+  { radius: 128, count: 32, glyphs: "." },
+] as const;
+
+/** Seconds between consecutive rings so the pulse reads as one ripple from the center. */
+const WAVE_RING_STAGGER_S = 0.2;
 
 export default function StationMarker({
   station,
@@ -18,25 +52,14 @@ export default function StationMarker({
   nearby,
   visited,
   inspecting,
-  effectsActive,
   onApproach,
 }: StationMarkerProps) {
   const playable = station.kind === "playable";
   const lit = nearby || inspecting;
+  const attention = !visited;
+  const blue = attention || lit;
 
   return (
-    <>
-    <span
-      aria-hidden
-      className="pointer-events-none absolute z-[1] h-36 w-36 -translate-x-1/2 -translate-y-1/2 rounded-full blur-2xl md:h-44 md:w-44"
-      style={{
-        left: `${station.x}%`,
-        top: `${station.y}%`,
-        background: lit
-          ? "radial-gradient(circle, rgba(76,141,255,0.55) 0%, rgba(76,141,255,0.16) 42%, transparent 70%)"
-          : "radial-gradient(circle, rgba(76,141,255,0.34) 0%, rgba(76,141,255,0.1) 42%, transparent 70%)",
-      }}
-    />
     <button
       type="button"
       style={{ left: `${station.x}%`, top: `${station.y}%` }}
@@ -53,55 +76,53 @@ export default function StationMarker({
         transition={{ delay: 0.3 + index * 0.06, duration: 0.5 }}
         className="relative flex h-full w-full items-end justify-center"
       >
-        {nearby && (
-          <motion.span
-            aria-hidden
-            className="pointer-events-none absolute bottom-2 left-1/2 h-24 w-24 -translate-x-1/2 rounded-full border border-[#4C8DFF]/45"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.55, 0.15, 0.55] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          />
+        {(lit || nearby) && (
+          <AsciiWaves lit={lit} nearby={nearby} phaseOffset={index * 0.18} />
         )}
 
         <span
           className={`absolute bottom-0 left-1/2 h-2.5 w-12 -translate-x-1/2 translate-y-1 rounded-full blur-[3px] transition-colors ${
-            lit ? "bg-[#4C8DFF]/40" : "bg-black/45"
+            blue ? "bg-accent/45" : "bg-black/45"
           }`}
           aria-hidden
         />
 
-        {playable ? (
+        {playable && blue ? (
           <ElectricBorder
-            active={effectsActive}
-            color="#4C8DFF"
+            active={lit && !inspecting}
             borderRadius={8}
-            className={`mb-0 h-[4.25rem] w-[3.35rem] origin-bottom transition-transform duration-300 md:h-[5rem] md:w-16 ${
+            className={`relative z-[1] mb-0 h-[4.25rem] w-[3.35rem] origin-bottom transition-transform duration-300 md:h-[5rem] md:w-16 ${
               lit ? "scale-110" : "scale-100"
             }`}
           >
-            <Cabinet lit={lit} playable visited={visited} />
+            <Cabinet station={station} tone="blue" playable />
           </ElectricBorder>
         ) : (
           <div
-            className={`relative mb-0 h-[4.25rem] w-[3.35rem] origin-bottom transition-transform duration-300 md:h-[5rem] md:w-16 ${
+            className={`relative z-[1] mb-0 h-[4.25rem] w-[3.35rem] origin-bottom transition-transform duration-300 md:h-[5rem] md:w-16 ${
               lit ? "scale-110" : "scale-100"
-            }`}
+            } ${attention && !playable ? "station-attention" : ""}`}
           >
-            <Cabinet lit={lit} playable={false} visited={visited} />
+            <Cabinet
+              station={station}
+              tone={blue ? "blue" : visited ? "visited" : "idle"}
+              playable={false}
+            />
           </div>
         )}
 
         {/* Labels hang below the floor point, always centered on the pedestal */}
-        <div className="absolute top-full left-1/2 mt-2 w-28 -translate-x-1/2 md:w-32">
+        <div className="absolute top-full left-1/2 z-[1] mt-2 w-28 -translate-x-1/2 md:w-32">
           <p
             className={`m-0 w-full text-center font-heading text-[11px] font-semibold leading-tight md:text-xs ${
-              lit || visited ? "text-text-primary" : "text-text-muted"
+              blue || visited ? "text-text-primary" : "text-text-muted"
             }`}
           >
             {station.shortLabel}
           </p>
           <p
             className={`m-0 mt-0.5 w-full text-center font-mono text-[9px] uppercase tracking-[0.14em] md:text-[10px] ${
-              lit ? "text-accent" : "text-text-muted/70"
+              blue ? "text-accent" : "text-text-muted/70"
             }`}
           >
             {station.tagline}
@@ -109,43 +130,113 @@ export default function StationMarker({
         </div>
       </motion.div>
     </button>
-    </>
+  );
+}
+
+function AsciiWaves({
+  lit,
+  nearby,
+  phaseOffset,
+}: {
+  lit: boolean;
+  nearby: boolean;
+  phaseOffset: number;
+}) {
+  const maxRadius = WAVE_RINGS[WAVE_RINGS.length - 1].radius;
+  const pulsing = lit || nearby;
+
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute bottom-[2.15rem] left-1/2 z-0 h-0 w-0 -translate-x-1/2 select-none text-accent"
+    >
+      {WAVE_RINGS.map((ring, ringIndex) => {
+        const distanceFade = 1 - ring.radius / (maxRadius + 8);
+        const peak = (nearby ? 0.95 : lit ? 0.72 : 0) * distanceFade;
+        // Inner rings lead so the pulse expands from the cabinet outward.
+        const delay = pulsing
+          ? phaseOffset + ringIndex * WAVE_RING_STAGGER_S
+          : 0;
+
+        return (
+          <div
+            key={ring.radius}
+            className={pulsing ? "ascii-wave-ring" : "ascii-wave-ring-paused"}
+            style={
+              {
+                "--wave-peak": peak,
+                animationDelay: pulsing ? `${delay}s` : undefined,
+              } as CSSProperties
+            }
+          >
+            {Array.from({ length: ring.count }, (_, i) => {
+              const angle = (i / ring.count) * Math.PI * 2 - Math.PI / 2;
+              const x = Math.cos(angle) * ring.radius;
+              const y = Math.sin(angle) * ring.radius;
+              const glyph = ring.glyphs[i % ring.glyphs.length];
+              return (
+                <span
+                  key={i}
+                  className="absolute font-mono text-[10px] leading-none md:text-[11px]"
+                  style={{
+                    left: x,
+                    top: y,
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  {glyph}
+                </span>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
 function Cabinet({
-  lit,
+  station,
+  tone,
   playable,
-  visited,
 }: {
-  lit: boolean;
+  station: WorldStation;
+  tone: "blue" | "visited" | "idle";
   playable: boolean;
-  visited: boolean;
 }) {
+  const Icon = STATION_ICONS[station.kind];
+  const frame =
+    tone === "blue" && playable
+      ? "bg-[#101018]"
+      : tone === "blue"
+        ? "rounded-t-lg rounded-b-md border border-accent bg-accent/20 shadow-[0_0_16px_rgba(0,229,255,0.28)]"
+        : tone === "visited"
+          ? "rounded-t-lg rounded-b-md border border-white/20 bg-bg-card/75"
+          : "rounded-t-lg rounded-b-md border border-border/70 bg-bg-card/55";
+
+  const iconTone =
+    tone === "blue"
+      ? "text-accent drop-shadow-[0_0_10px_rgba(0,229,255,0.45)]"
+      : tone === "visited"
+        ? "text-text-secondary"
+        : "text-text-muted/55";
+
   return (
     <div
-      className={`flex h-full w-full flex-col items-center justify-end overflow-hidden rounded-lg ${
-        playable
-          ? lit
-            ? "bg-[#101018]"
-            : "bg-bg-card/90"
-          : lit
-            ? "rounded-t-lg rounded-b-md border border-[#4C8DFF] bg-[#4C8DFF]/15 shadow-[0_0_28px_rgba(76,141,255,0.45)]"
-            : visited
-              ? "rounded-t-lg rounded-b-md border border-white/20 bg-bg-card/75"
-              : "rounded-t-lg rounded-b-md border border-border/70 bg-bg-card/55"
-      }`}
+      className={`flex h-full w-full flex-col items-center justify-end overflow-hidden rounded-lg ${frame}`}
     >
       <span
-        className={`mb-1.5 h-7 w-10 shrink-0 rounded-sm transition-colors md:h-8 md:w-11 ${
-          lit || playable
-            ? "bg-gradient-to-b from-[#4C8DFF]/55 to-[#4C8DFF]/5"
-            : "bg-gradient-to-b from-white/12 to-transparent"
+        className={`mb-1.5 flex h-7 w-10 shrink-0 items-center justify-center rounded-sm transition-colors md:h-8 md:w-11 ${
+          tone === "blue"
+            ? "bg-gradient-to-b from-accent/25 to-accent/5"
+            : "bg-gradient-to-b from-white/10 to-transparent"
         }`}
         aria-hidden
-      />
+      >
+        <Icon className={iconTone} size={playable ? 22 : 20} />
+      </span>
       <span
-        className={`h-1.5 w-full shrink-0 ${lit || playable ? "bg-[#4C8DFF]/70" : "bg-white/10"}`}
+        className={`h-1.5 w-full shrink-0 ${tone === "blue" ? "bg-accent/70" : "bg-white/10"}`}
         aria-hidden
       />
     </div>

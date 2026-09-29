@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { resolveWorldMovement } from "../data/worldProps";
 import { WORLD_SCALE, worldStations } from "../data/world";
 
 export interface Vec2 {
@@ -235,8 +236,13 @@ export function useFloorExplorer(enabled: boolean) {
         movingChanged = setMovingIf(false);
       }
 
-      x = clamp(x, BOUNDS.minX, BOUNDS.maxX);
-      y = clamp(y, BOUNDS.minY, BOUNDS.maxY);
+      const clamped = {
+        x: clamp(x, BOUNDS.minX, BOUNDS.maxX),
+        y: clamp(y, BOUNDS.minY, BOUNDS.maxY),
+      };
+      const resolved = resolveWorldMovement(posRef.current, clamped);
+      x = resolved.x;
+      y = resolved.y;
 
       const moved = x !== posRef.current.x || y !== posRef.current.y;
       if (moved) posRef.current = { x, y };
