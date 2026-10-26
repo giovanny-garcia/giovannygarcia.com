@@ -1,0 +1,18 @@
+{
+  "name": "giovannygarcia-portfolio",
+  "private": true,
+  "workspaces": [
+    "apps/site",
+    "prototypes/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w apps/site",
+    "build": "npm run build -w apps/site",
+    "preview": "npm run preview -w apps/site",
+    "lint": "npm run lint -w apps/site",
+    "build:all": "npm run build --workspaces",
+    "dev:portfoliosite": "npm run dev -w prototypes/portfoliosite",
+    "dev:threejs": "npm run dev -w prototypes/threejs-app",
+    "dev:vite-portfolio": "npm run dev -w prototypes/vite-portfolio"
+  }
+}
