@@ -1,0 +1,190 @@
+[gd_scene load_steps=12 format=3 uid="uid://b5savnorj4t0q"]
+
+[ext_resource type="Script" path="res://Scripts/Player/UserInterface.gd" id="1_d66tg"]
+[ext_resource type="PackedScene" uid="uid://btf0iccai10qr" path="res://addons/versatile-mobile-joystick/joystick.tscn" id="2_nju8u"]
+[ext_resource type="Texture2D" uid="uid://b3rjj1bmqtiok" path="res://addons/versatile-mobile-joystick/default_textures/BaseJoystickTest.png" id="3_op4c3"]
+[ext_resource type="Texture2D" uid="uid://dlgmq4q7t23o8" path="res://addons/versatile-mobile-joystick/default_textures/TipJoystickTest.png" id="4_n4ofn"]
+[ext_resource type="Texture2D" uid="uid://dntw303j2w3ly" path="res://Assets/UI/Minimap.png" id="5_4yykv"]
+[ext_resource type="PackedScene" uid="uid://73jm5qjy52vq" path="res://addons/dialogue_manager/example_balloon/example_balloon.tscn" id="6_fenao"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_yb6wg"]
+size = Vector2(150, 250)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kq3io"]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i3khs"]
+radius = 25.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_62lar"]
+size = Vector2(640, 360)
+
+[sub_resource type="Curve" id="Curve_ays8j"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
+point_count = 2
+
+[node name="UserInterface" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_d66tg")
+
+[node name="Phone" type="Control" parent="."]
+visible = false
+custom_minimum_size = Vector2(150, 250)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -413.0
+offset_top = -292.0
+offset_right = -263.0
+offset_bottom = -42.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Phone"]
+z_index = -1
+y_sort_enabled = true
+texture = SubResource("PlaceholderTexture2D_yb6wg")
+centered = false
+
+[node name="GridContainer" type="GridContainer" parent="Phone"]
+y_sort_enabled = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.5
+offset_top = -50.5
+offset_right = 32.5
+offset_bottom = 50.5
+grow_horizontal = 2
+grow_vertical = 2
+columns = 3
+
+[node name="Settings" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "sett."
+
+[node name="Home" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "home"
+
+[node name="Music" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "music"
+
+[node name="Button4" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button5" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button6" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button7" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button8" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="Button9" type="Button" parent="Phone/GridContainer"]
+layout_mode = 2
+text = "h"
+
+[node name="TopBar" type="Control" parent="Phone"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Phone/TopBar"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Phone/TopBar/HBoxContainer"]
+layout_mode = 2
+text = "Time: 14:03"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Phone/TopBar"]
+
+[node name="Joystick" type="Node2D" parent="."]
+position = Vector2(-2, 289)
+
+[node name="JoystickController" parent="Joystick" instance=ExtResource("2_nju8u")]
+position = Vector2(393, 178)
+base_texture = ExtResource("3_op4c3")
+tip_texture = ExtResource("4_n4ofn")
+deadzone_circle = SubResource("CircleShape2D_kq3io")
+tip_limit_circle = SubResource("CircleShape2D_i3khs")
+touch_detection_region = SubResource("RectangleShape2D_62lar")
+strength_curve = SubResource("Curve_ays8j")
+visibility_mode = 1
+left_movement = "LEFT"
+right_movement = "RIGHT"
+up_movement = "FORWARD"
+down_movement = "BACKWARD"
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -137.0
+offset_bottom = 124.0
+grow_horizontal = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Control"]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("5_4yykv")
+centered = false
+
+[node name="ToastContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 300.0
+offset_bottom = 342.0
+
+[node name="Toast" type="Control" parent="ToastContainer"]
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="ToastContainer/Toast"]
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.0469324, 0.21401, 0.22506, 1)
+
+[node name="Label" type="Label" parent="ToastContainer/Toast"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "This is where the text goes"
+
+[node name="Button" type="Button" parent="ToastContainer/Toast"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -18.0
+offset_top = 1.0
+offset_bottom = 32.0
+grow_horizontal = 0
+text = "X"
+
+[node name="ExampleBalloon" parent="." instance=ExtResource("6_fenao")]
