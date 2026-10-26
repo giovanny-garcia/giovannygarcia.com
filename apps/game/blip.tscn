@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://ccum0pahu2mhu"]
+
+[ext_resource type="PackedScene" uid="uid://c3cjr7dhkhj0g" path="res://Assets/MeshLibrary/Blip/blip.glb" id="1_aagmb"]
+[ext_resource type="Script" path="res://blip.gd" id="1_dl04o"]
+
+[node name="Blip" type="Node3D"]
+script = ExtResource("1_dl04o")
+
+[node name="blockbench_export" parent="." instance=ExtResource("1_aagmb")]

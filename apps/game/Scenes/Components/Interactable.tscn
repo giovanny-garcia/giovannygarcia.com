@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://c7h1v6p58ebg8"]
+
+[node name="Interactable" type="Area3D"]
+collision_layer = 0
+collision_mask = 0

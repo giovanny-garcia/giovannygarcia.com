@@ -1,0 +1,30 @@
+[gd_scene load_steps=8 format=3 uid="uid://dnbatu0jyivwl"]
+
+[ext_resource type="PackedScene" uid="uid://btf0iccai10qr" path="res://addons/versatile-mobile-joystick/joystick.tscn" id="1_12ixt"]
+[ext_resource type="Texture2D" uid="uid://b3rjj1bmqtiok" path="res://addons/versatile-mobile-joystick/default_textures/BaseJoystickTest.png" id="2_f0lsj"]
+[ext_resource type="Texture2D" uid="uid://dlgmq4q7t23o8" path="res://addons/versatile-mobile-joystick/default_textures/TipJoystickTest.png" id="3_t7335"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kq3io"]
+radius = 9.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i3khs"]
+radius = 90.69
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_62lar"]
+size = Vector2(640, 360)
+
+[sub_resource type="Curve" id="Curve_ays8j"]
+_data = [Vector2(0, 0), 0.0, 1.0, 0, 1, Vector2(1, 1), 1.0, 0.0, 1, 0]
+point_count = 2
+
+[node name="Example" type="Node2D"]
+
+[node name="JoystickController" parent="." instance=ExtResource("1_12ixt")]
+position = Vector2(321, 180)
+base_texture = ExtResource("2_f0lsj")
+tip_texture = ExtResource("3_t7335")
+deadzone_circle = SubResource("CircleShape2D_kq3io")
+tip_limit_circle = SubResource("CircleShape2D_i3khs")
+touch_detection_region = SubResource("RectangleShape2D_62lar")
+strength_curve = SubResource("Curve_ays8j")
+visibility_mode = 1
